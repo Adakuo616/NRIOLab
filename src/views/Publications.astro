@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { UI, NAV, type Lang } from '../lib/i18n';
+import data from '../data/publications.json';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = UI[lang];
+const title = NAV[4][lang];
+const list = [...data.items].sort((a: any, b: any) => (+b.year || 0) - (+a.year || 0));
+const types = Object.keys(ui.pubTypes) as (keyof typeof ui.pubTypes)[];
+const groups = types.map((type) => ({ type, list: list.filter((p: any) => (p.type || 'other') === type) })).filter((g) => g.list.length);
+---
+<Base lang={lang} path="publications/" navId="publications" title={title}>
+  <div class="container">
+    <Breadcrumb lang={lang} items={[{ name: title, path: 'publications/' }]} />
+    <h1 class="page-title">{title}</h1>
+    {groups.length ? (
+      <>
+        <input class="search" type="search" placeholder={ui.search} aria-label={ui.search}>
+        {groups.map((g) => (
+          <section class="pub-group">
+            <h2>{ui.pubTypes[g.type]}</h2>
+            <ol class="pub-list">
+              {g.list.map((p: any) => (
+                <li>
+                  <span class="pub-year">{p.year}</span>
+                  <div>
+                    <div class="pub-authors">{p.authors}</div>
+                    <div class="pub-title">{p.link ? <a href={p.link} target="_blank" rel="noopener">{p.title}</a> : p.title}</div>
+                    {p.venue && <div class="muted"><em>{p.venue}</em></div>}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        ))}
+      </>
+    ) : <p class="empty">{ui.empty}</p>}
+  </div>
+</Base>
+<script>
+  const box = document.querySelector<HTMLInputElement>('.search');
+  box?.addEventListener('input', () => {
+    const q = box.value.trim().toLowerCase();
+    document.querySelectorAll<HTMLElement>('.pub-group').forEach((g) => {
+      let shown = 0;
+      g.querySelectorAll<HTMLElement>('li').forEach((li) => {
+        const hit = !q || (li.textContent || '').toLowerCase().includes(q);
+        li.hidden = !hit; if (hit) shown++;
+      });
+      g.hidden = !shown;
+    });
+  });
+</script>

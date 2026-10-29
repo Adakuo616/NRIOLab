@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import NewsCard from '../components/NewsCard.astro';
+import { UI, t, md, asset, href, site, type Lang } from '../lib/i18n';
+import { getNews } from '../lib/news';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = UI[lang];
+const news = (await getNews()).slice(0, 4);
+const origin = new URL(import.meta.env.BASE_URL, Astro.site).href;
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: t(site, 'name', lang), url: origin, inLanguage: lang === 'zh' ? 'zh-Hant' : 'en' },
+  {
+    '@context': 'https://schema.org', '@type': 'ResearchOrganization', name: t(site, 'name', 'zh'), alternateName: site.name_en, url: origin,
+    ...(site.logo ? { logo: new URL(asset(site.logo), Astro.site).href } : {}),
+    ...(site.email ? { email: site.email } : {}),
+    ...(site.address_zh ? { address: site.address_zh } : {}),
+    ...(site.institution_zh ? { parentOrganization: { '@type': 'CollegeOrUniversity', name: site.institution_zh } } : {})
+  }
+];
+const heroStyle = site.hero_image ? `background-image:linear-gradient(var(--hero-overlay),var(--hero-overlay)),url('${asset(site.hero_image)}')` : undefined;
+---
+<Base lang={lang} path="" navId="home" jsonLd={jsonLd}>
+  <section class="hero" style={heroStyle}>
+    <div class="container">
+      <h1>{t(site, 'name', lang)}</h1>
+      {t(site, 'tagline', lang) && <p>{t(site, 'tagline', lang)}</p>}
+    </div>
+  </section>
+  <div class="container">
+    <section class="intro-grid">
+      <div class="prose" set:html={md(t(site, 'intro', lang))} />
+      {(site.pi_name_zh || site.pi_name_en) && (
+        <aside class="pi-card">
+          {site.pi_photo ? <img src={asset(site.pi_photo)} alt={t(site, 'pi_name', lang)} width="80" height="80"> : <div class="avatar-ph" />}
+          <div><div class="muted">{t(site, 'pi_title', lang)}</div><strong>{t(site, 'pi_name', lang)}</strong></div>
+        </aside>
+      )}
+    </section>
+    <section>
+      <div class="section-head"><h2>{ui.latest}</h2><a href={href('news/', lang)}>{ui.more} →</a></div>
+      {news.length ? <div class="grid news-grid">{news.map((n) => <NewsCard entry={n} lang={lang} />)}</div> : <p class="empty">{ui.empty}</p>}
+    </section>
+  </div>
+</Base>

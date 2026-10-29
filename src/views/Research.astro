@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { UI, NAV, t, md, asset, type Lang } from '../lib/i18n';
+import data from '../data/research.json';
+
+const { lang } = Astro.props as { lang: Lang };
+const title = NAV[2][lang];
+---
+<Base lang={lang} path="research/" navId="research" title={title}>
+  <div class="container">
+    <Breadcrumb lang={lang} items={[{ name: title, path: 'research/' }]} />
+    <h1 class="page-title">{title}</h1>
+    {data.items.length ? (
+      <div class="research-list">
+        {data.items.map((r: any) => (
+          <section class={`research-item${r.image ? ' has-img' : ''}`}>
+            {r.image && <img src={asset(r.image)} alt={t(r, 'title', lang)} loading="lazy" width="300" height="225">}
+            <div><h2>{t(r, 'title', lang)}</h2><div class="prose" set:html={md(t(r, 'summary', lang))} /></div>
+          </section>
+        ))}
+      </div>
+    ) : <p class="empty">{UI[lang].empty}</p>}
+  </div>
+</Base>

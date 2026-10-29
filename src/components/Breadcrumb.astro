@@ -1,0 +1,13 @@
+---
+import { UI, href, type Lang } from '../lib/i18n';
+const { lang, items } = Astro.props as { lang: Lang; items: { name: string; path: string }[] };
+const all = [{ name: UI[lang].home, path: '' }, ...items];
+const jsonLd = {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: all.map((it, i) => ({ '@type': 'ListItem', position: i + 1, name: it.name, item: new URL(href(it.path, lang), Astro.site).href }))
+};
+---
+<nav class="breadcrumb" aria-label="breadcrumb">
+  {all.map((it, i) => i < all.length - 1 ? <><a href={href(it.path, lang)}>{it.name}</a><span aria-hidden="true">/</span></> : <span aria-current="page">{it.name}</span>)}
+</nav>
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

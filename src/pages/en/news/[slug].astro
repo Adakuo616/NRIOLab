@@ -1,0 +1,9 @@
+---
+import View from '../../../views/NewsDetail.astro';
+import { getNews } from '../../../lib/news';
+
+export async function getStaticPaths() {
+  return (await getNews()).map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+---
+<View lang="en" entry={Astro.props.entry} />

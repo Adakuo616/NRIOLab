@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { UI, NAV, t, site, type Lang } from '../lib/i18n';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = UI[lang];
+const title = NAV[5][lang];
+const address = t(site, 'address', lang);
+const jsonLd = [{ '@context': 'https://schema.org', '@type': 'ContactPage', name: title }];
+---
+<Base lang={lang} path="contact/" navId="contact" title={title} jsonLd={jsonLd}>
+  <div class="container">
+    <Breadcrumb lang={lang} items={[{ name: title, path: 'contact/' }]} />
+    <h1 class="page-title">{title}</h1>
+    <div class="contact-grid">
+      <dl class="contact-list">
+        {address && <><dt>{ui.address}</dt><dd>{address}</dd></>}
+        {site.email && <><dt>{ui.email}</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></>}
+        {site.phone && <><dt>{ui.phone}</dt><dd><a href={`tel:${site.phone}`}>{site.phone}</a></dd></>}
+      </dl>
+      {site.map_query && <iframe class="map" loading="lazy" title="map" src={`https://maps.google.com/maps?q=${encodeURIComponent(site.map_query)}&output=embed`}></iframe>}
+    </div>
+  </div>
+</Base>

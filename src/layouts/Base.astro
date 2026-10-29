@@ -1,0 +1,89 @@
+---
+import '../styles.css';
+import { NAV, UI, HTML_LANG, OG_LOCALE, LANGS, href, asset, t, site, type Lang } from '../lib/i18n';
+
+interface Props {
+  lang: Lang;
+  /** Page path without language prefix, e.g. "news/" ('' for home). */
+  path: string;
+  title?: string;
+  description?: string;
+  image?: string | null;
+  navId?: string;
+  ogType?: string;
+  jsonLd?: object[];
+  noindex?: boolean;
+}
+const { lang, path, title, description, image, navId, ogType = 'website', jsonLd = [], noindex = false } = Astro.props;
+const ui = UI[lang];
+const name = t(site, 'name', lang);
+const fullTitle = title ? `${title}｜${name}` : name;
+const desc = description || t(site, 'description', lang);
+const abs = (p: string) => new URL(p, Astro.site).href;
+const canonical = abs(href(path, lang));
+const ogImage = image || site.hero_image || site.logo;
+const other: Lang = lang === 'zh' ? 'en' : 'zh';
+---
+<!doctype html>
+<html lang={HTML_LANG[lang]}>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{fullTitle}</title>
+  <meta name="description" content={desc}>
+  {noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
+  {!noindex && LANGS.map((l) => <link rel="alternate" hreflang={HTML_LANG[l]} href={abs(href(path, l))}>)}
+  {!noindex && <link rel="alternate" hreflang="x-default" href={abs(href(path, 'zh'))}>}
+  {site.google_site_verification && <meta name="google-site-verification" content={site.google_site_verification}>}
+  <meta property="og:type" content={ogType}>
+  <meta property="og:site_name" content={name}>
+  <meta property="og:title" content={fullTitle}>
+  <meta property="og:description" content={desc}>
+  <meta property="og:url" content={canonical}>
+  <meta property="og:locale" content={OG_LOCALE[lang]}>
+  {ogImage && <meta property="og:image" content={abs(asset(ogImage))}>}
+  <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'}>
+  {site.logo && <link rel="icon" href={asset(site.logo)}>}
+  <link rel="sitemap" href={abs(`${import.meta.env.BASE_URL}sitemap.xml`)}>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+</head>
+<body>
+  <a class="skip" href="#main">{lang === 'zh' ? '跳到主要內容' : 'Skip to content'}</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href={href('', lang)}>
+        {site.logo && <img src={asset(site.logo)} alt="" width="36" height="36">}
+        <span>{name}</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-label={ui.menu} aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
+      <nav class="nav" id="nav" aria-label={ui.menu}>
+        {NAV.map((n) => <a href={href(n.path, lang)} aria-current={n.id === navId ? 'page' : undefined}>{n[lang]}</a>)}
+        <a class="lang-btn" href={href(path, other)} hreflang={HTML_LANG[other]} lang={HTML_LANG[other]}>{ui.switchLang}</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main"><slot /></main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <strong>{name}</strong>
+        {t(site, 'institution', lang) && <div>{t(site, 'institution', lang)}</div>}
+        {t(site, 'address', lang) && <div>{t(site, 'address', lang)}</div>}
+        {site.email && <div><a href={`mailto:${site.email}`}>{site.email}</a></div>}
+      </div>
+      <div class="muted">© {new Date().getFullYear()} {name}</div>
+    </div>
+  </footer>
+  <script>
+    const toggle = document.querySelector('.nav-toggle');
+    const nav = document.getElementById('nav');
+    toggle?.addEventListener('click', () => {
+      const open = nav!.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+---
+import { UI, t, asset, href, fmtDate, isoDate, type Lang } from '../lib/i18n';
+import type { News } from '../lib/news';
+const { entry, lang } = Astro.props as { entry: News; lang: Lang };
+const d = entry.data;
+---
+<a class="card news-card" href={href(`news/${entry.id}/`, lang)} data-cat={d.category || ''}>
+  {d.image && <img class="card-img" src={asset(d.image)} alt="" loading="lazy" width="480" height="270">}
+  <div class="card-body">
+    <div class="meta">
+      <time datetime={isoDate(d.date)}>{fmtDate(d.date)}</time>
+      {d.category && <span class="tag">{d.category}</span>}
+      {d.pinned && <span class="tag tag-pin">{UI[lang].pinned}</span>}
+    </div>
+    <h3>{t(d, 'title', lang)}</h3>
+  </div>
+</a>
