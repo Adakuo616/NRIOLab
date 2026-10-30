@@ -184,6 +184,7 @@ collections:
           - { name: name_en, label: 實驗室名稱（英文） }
           - { name: short_name, label: 簡稱, default: NRIO Lab }
           - { name: logo, label: LOGO, widget: image, required: false }
+          - { name: share_image, label: 分享預覽圖（LINE／Facebook 顯示的圖片，建議 1200×630）, widget: image, required: false }
           - { name: banner_image, label: 頁面橫幅背景（星空圖）, widget: image, required: false }
           - { name: intro_title_zh, label: 介紹標題（中文）, required: false, default: 研究室簡介 }
           - { name: intro_title_en, label: 介紹標題（英文）, required: false }
