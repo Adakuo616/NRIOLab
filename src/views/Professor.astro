@@ -8,6 +8,10 @@ const { lang } = Astro.props as { lang: Lang };
 const ui = UI[lang];
 const nav = navItem('professor');
 const name = t(prof, 'name', lang);
+// One-line sections (研究領域、教授課程、學歷) show as cards; dated lists show as timelines.
+const isList = (s: any) => /^\s*[-*] /m.test(t(s, 'content', lang));
+const facts = prof.sections.filter((s: any) => !isList(s));
+const timelines = prof.sections.filter(isList);
 const jsonLd = [{
   '@context': 'https://schema.org', '@type': 'ProfilePage',
   mainEntity: { '@type': 'Person', name: prof.name_zh, ...(prof.department_zh ? { worksFor: { '@type': 'CollegeOrUniversity', name: prof.department_zh } } : {}), ...(prof.name_en ? { alternateName: prof.name_en } : {}), jobTitle: t(prof, 'title', lang),
@@ -31,7 +35,17 @@ const jsonLd = [{
       </div>
     </section>
     {t(prof, 'bio', lang) && <div class="prose" set:html={md(t(prof, 'bio', lang))} />}
-    {prof.sections.map((s: any) => (
+    {facts.length > 0 && (
+      <div class="prof-facts">
+        {facts.map((s: any) => (
+          <section class="fact">
+            <h2>{t(s, 'heading', lang)}</h2>
+            <div set:html={md(t(s, 'content', lang))} />
+          </section>
+        ))}
+      </div>
+    )}
+    {timelines.map((s: any) => (
       <section class="prof-section">
         <h2 class="section-title">{t(s, 'heading', lang)}</h2>
         <div class="prose timeline" set:html={md(t(s, 'content', lang))} />

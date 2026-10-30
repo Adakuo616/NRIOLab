@@ -1,0 +1,25 @@
+---
+// Decorative network lines drawn in the style of the NRIO logo:
+// navy double-line strokes with rounded corners, blue segments and green end nodes.
+const { class: cls = '' } = Astro.props as { class?: string };
+const paths = [
+  'M40 360 L40 190 Q40 150 80 150 L190 150 L290 250 L420 250',
+  'M130 40 L240 40 Q280 40 280 80 L280 150 L370 240',
+  'M520 30 L520 140 Q520 180 560 180 L640 180',
+  'M180 360 L180 300 Q180 270 210 270 L300 270',
+];
+const blue = ['M190 150 L290 250', 'M280 80 L280 150', 'M520 30 L520 110'];
+const nodes = [[40, 360], [420, 250], [130, 40], [370, 240], [640, 180], [300, 270], [180, 360]];
+---
+<svg class={`network-art ${cls}`} viewBox="0 0 680 400" fill="none" aria-hidden="true" focusable="false">
+  <g stroke-linecap="round" stroke-linejoin="round">
+    {paths.map((d) => <path d={d} stroke="var(--navy)" stroke-width="14" />)}
+    {blue.map((d) => <path d={d} stroke="var(--logo-blue)" stroke-width="14" />)}
+    {paths.map((d) => <path d={d} stroke="#fff" stroke-width="3.5" />)}
+    <circle cx="560" cy="300" r="56" stroke="var(--navy)" stroke-width="14" />
+    <path d="M504 300 A56 56 0 0 1 560 244" stroke="var(--logo-blue)" stroke-width="14" />
+    <circle cx="560" cy="300" r="56" stroke="#fff" stroke-width="3.5" />
+    <circle cx="560" cy="300" r="34" stroke="var(--logo-green)" stroke-width="10" />
+  </g>
+  {nodes.map(([x, y]) => <circle cx={x} cy={y} r="12" fill="var(--logo-green)" />)}
+</svg>

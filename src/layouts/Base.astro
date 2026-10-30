@@ -21,7 +21,7 @@ const fullTitle = title ? `${title}｜${name}` : name;
 const desc = description || t(site, 'description', lang);
 const abs = (p: string) => new URL(p, Astro.site).href;
 const canonical = abs(href(path, lang));
-const ogImage = image || site.banner_image || site.logo;
+const ogImage = image || site.logo;
 const other: Lang = lang === 'zh' ? 'en' : 'zh';
 ---
 <!doctype html>
@@ -47,7 +47,7 @@ const other: Lang = lang === 'zh' ? 'en' : 'zh';
   <link rel="sitemap" href={abs(`${import.meta.env.BASE_URL}sitemap.xml`)}>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
   {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
 </head>
 <body>
@@ -84,17 +84,26 @@ const other: Lang = lang === 'zh' ? 'en' : 'zh';
   </header>
   <main id="main"><slot /></main>
   <footer class="site-footer">
-    <div class="container narrow">
-      <section class="footer-contact">
-        <h2>{ui.contact}</h2>
-        {t(site, 'address', lang) && <p>{ui.address}：{t(site, 'address', lang)}</p>}
-        {site.email && <p>{ui.email}：<a href={`mailto:${site.email}`}>{site.email}</a></p>}
-        {site.phone && <p>{ui.phone}：<a href={`tel:${site.phone.replace(/[^0-9+]/g, '')}`}>{site.phone}</a></p>}
-      </section>
-      <nav class="footer-links" aria-label="footer">
-        {FOOTER_LINKS.map((id) => <a href={href(navItem(id).path, lang)}>{navItem(id)[lang]}</a>)}
-      </nav>
-      <p class="copyright">© {new Date().getFullYear()} {name}</p>
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          {site.logo && <img src={asset(site.logo)} alt={site.short_name} width="170" height="90" loading="lazy">}
+          <p><strong>{name}</strong>{t(site, 'institution', lang) && <><br>{t(site, 'institution', lang)}</>}</p>
+        </div>
+        <section class="footer-contact">
+          <h2>{ui.contact}</h2>
+          {t(site, 'address', lang) && <p><span>{ui.address}</span>{t(site, 'address', lang)}</p>}
+          {site.email && <p><span>{ui.email}</span><a href={`mailto:${site.email}`}>{site.email}</a></p>}
+          {site.phone && <p><span>{ui.phone}</span><a href={`tel:${site.phone.replace(/[^0-9+]/g, '')}`}>{site.phone}</a></p>}
+        </section>
+        <div>
+          <h2>{lang === 'zh' ? '快速連結' : 'Quick Links'}</h2>
+          <nav class="footer-links" aria-label="footer">
+            {FOOTER_LINKS.map((id) => <a href={href(navItem(id).path, lang)}>{navItem(id)[lang]}</a>)}
+          </nav>
+        </div>
+      </div>
+      <p class="copyright"><span>© {new Date().getFullYear()} {name}</span><span>{site.short_name}</span></p>
     </div>
   </footer>
   <script>

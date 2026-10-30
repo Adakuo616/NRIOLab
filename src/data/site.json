@@ -22,5 +22,28 @@
   "intro_figure_caption_zh": "隨機流量網路可靠度研究程序",
   "intro_figure_caption_en": "",
   "name_zh_full": "網路可靠度與智慧營運實驗室",
-  "tagline_en_full": "Network Reliability and Intelligent Operations"
+  "tagline_en_full": "Network Reliability and Intelligent Operations",
+  "hero_lead_zh": "本實驗室著重於網路可靠度之技術開發與推廣應用，持續因應產業與技術發展趨勢，拓展模擬、智慧決策與網路韌性等研究方向。",
+  "hero_lead_en": "",
+  "highlights": [
+    {
+      "title_zh": "網路可靠度",
+      "title_en": "Network Reliability",
+      "text_zh": "研究成果廣泛應用於作業管理系統之績效評估、監控、改善與最佳化，研究範圍涵蓋製造網路、供應鏈網路、專案網路及其他複雜作業系統。",
+      "text_en": ""
+    },
+    {
+      "title_zh": "模擬方法",
+      "title_en": "Simulation Methods",
+      "text_zh": "發展模擬方法以提升複雜網路可靠度評估之計算效率與應用彈性。",
+      "text_en": ""
+    },
+    {
+      "title_zh": "智慧營運與網路韌性",
+      "title_en": "Intelligent Operations & Resilience",
+      "text_zh": "結合深度學習、代理人基礎建模與模擬（ABMS）及大型語言模型等技術，探討不確定環境下之動態決策與系統調適，並延伸至網路韌性與復原策略。",
+      "text_en": ""
+    }
+  ],
+  "logo_hero": "/images/uploads/nrio-logo-transparent.png"
 }
