@@ -15,6 +15,13 @@ const zh = lang === 'zh';
 
 const withPhoto = (await getCurrentNews()).filter((n) => n.data.images?.length);
 const featured = withPhoto.slice(0, 3);
+// Professor card details come from the professor page data: research areas and current (「迄今」) roles.
+const section = (zhHeading: string) => prof.sections.find((x: any) => x.heading_zh === zhHeading);
+const areas = (t(section('研究領域'), 'content', lang) || '').split(/[、,，]/).map((x: string) => x.trim()).filter(Boolean);
+const currentRoles = ['經歷', '學術服務'].flatMap((h) => (t(section(h), 'content', lang) || '').split('\n'))
+  .filter((line: string) => line.includes('迄今'))
+  .map((line: string) => line.replace(/^-\s*\*\*[^*]+\*\*\s*/, '').replace(/\s{2,}/g, ' ').trim())
+  .slice(0, 4);
 // One photo per 生活點滴 event for the mosaic.
 const lifePhotos = life.items.flatMap((it: any) => (it.images || []).slice(0, 1).map((src: string) => ({ src, title: t(it, 'title', lang), alt: t(it, 'title', lang) })));
 const photos = lifePhotos.slice(0, 5);
@@ -91,19 +98,33 @@ const jsonLd = [
   <section class="section">
     <div class="container">
       <div class="home-split reveal">
-        <div>
+        <div class="split-col">
           <header class="sec-head"><div><p class="eyebrow">Professor</p><h2>{zh ? '指導教授' : 'Professor'}</h2></div></header>
           <div class="pi-feature">
-            {prof.photo && <img src={asset(prof.photo)} alt={t(prof, 'name', lang)} width="150" height="150" loading="lazy">}
-            <div>
-              <h3>{t(prof, 'name', lang)}{zh && prof.name_en && <small lang="en">{prof.name_en}</small>}</h3>
-              <p>{t(prof, 'department', lang)} {t(prof, 'title', lang)}</p>
-              <a class="btn" href={href('professor/', lang)}>{zh ? '教授介紹' : 'Profile'} →</a>
+            <div class="pi-head">
+              {prof.photo && <img src={asset(prof.photo)} alt={t(prof, 'name', lang)} width="150" height="150" loading="lazy">}
+              <div>
+                <h3>{t(prof, 'name', lang)}{zh && prof.name_en && <small lang="en">{prof.name_en}</small>}</h3>
+                <p>{t(prof, 'department', lang)} {t(prof, 'title', lang)}</p>
+              </div>
             </div>
+            {areas.length > 0 && (
+              <div class="pi-block">
+                <h4>{zh ? '研究領域' : 'Research Areas'}</h4>
+                <ul class="pi-tags">{areas.map((a: string) => <li>{a}</li>)}</ul>
+              </div>
+            )}
+            {currentRoles.length > 0 && (
+              <div class="pi-block">
+                <h4>{zh ? '現任' : 'Current Positions'}</h4>
+                <ul class="pi-roles">{currentRoles.map((r: string) => <li>{r}</li>)}</ul>
+              </div>
+            )}
+            <a class="btn" href={href('professor/', lang)}>{zh ? '教授介紹' : 'Profile'} →</a>
           </div>
         </div>
         {photos.length > 0 && (
-          <div>
+          <div class="split-col">
             <header class="sec-head">
               <div><p class="eyebrow">Life</p><h2>{zh ? '生活點滴' : 'Life'}</h2></div>
               <a class="more-link" href={href('life/', lang)}>{ui.more}</a>
