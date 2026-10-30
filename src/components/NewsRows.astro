@@ -8,7 +8,7 @@ const { list, lang } = Astro.props as { list: News[]; lang: Lang };
     const d = n.data;
     return (
       <li data-cat={d.category || ''}>
-        <time datetime={isoDate(d.date)}>{fmtDate(d.date)}</time>
+        <time class="date-chip" datetime={isoDate(d.date)}><span class="d-md">{fmtDate(d.date).slice(5)}</span><span class="d-y">{d.date.getUTCFullYear()}</span></time>
         <div class="news-main">
           {d.category && <span class={`cat ${CATEGORY_CLASS[d.category] || ''}`}>【{d.category}】</span>}
           {d.pinned && <span class="cat cat-pin">{UI[lang].pinned}</span>}

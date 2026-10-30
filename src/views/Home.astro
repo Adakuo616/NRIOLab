@@ -1,16 +1,37 @@
 ---
 import Base from '../layouts/Base.astro';
-import PageBanner from '../components/PageBanner.astro';
-import NewsRows from '../components/NewsRows.astro';
-import { UI, t, md, asset, href, site, plain, type Lang } from '../lib/i18n';
+import NewsCard from '../components/NewsCard.astro';
+import Icon from '../components/Icon.astro';
+import NetworkArt from '../components/NetworkArt.astro';
+import Stars from '../components/Stars.astro';
+import { UI, t, asset, href, site, type Lang } from '../lib/i18n';
 import { getCurrentNews } from '../lib/news';
+import prof from '../data/professor.json';
+import life from '../data/life.json';
 
 const { lang } = Astro.props as { lang: Lang };
 const ui = UI[lang];
-const news = (await getCurrentNews()).slice(0, 10);
+const zh = lang === 'zh';
+
+const withPhoto = (await getCurrentNews()).filter((n) => n.data.images?.length);
+const featured = withPhoto.slice(0, 3);
+// Professor card details come from the professor page data: research areas and the current (「迄今」) position.
+const section = (zhHeading: string) => prof.sections.find((x: any) => x.heading_zh === zhHeading);
+const areas = (t(section('研究領域'), 'content', lang) || '').split(/[、,，]/).map((x: string) => x.trim()).filter(Boolean);
+const currentRoles = ['經歷'].flatMap((h) => (t(section(h), 'content', lang) || '').split('\n'))
+  .filter((line: string) => line.includes('迄今'))
+  .map((line: string) => line.replace(/^-\s*\*\*[^*]+\*\*\s*/, '').replace(/\s{2,}/g, ' ').trim())
+  .slice(0, 1);
+// One photo per 生活點滴 event for the mosaic.
+const lifePhotos = life.items.flatMap((it: any) => (it.images || []).slice(0, 1).map((src: string) => ({ src, title: t(it, 'title', lang), alt: t(it, 'title', lang) })));
+const photos = lifePhotos.slice(0, 5);
+
+// Break the Chinese title before 「實驗室」 so it never splits mid-word.
+const fullName = site.name_zh_full || site.name_zh;
+const titleParts = fullName.endsWith('實驗室') ? [fullName.slice(0, -3), '實驗室'] : [fullName];
 const origin = new URL(import.meta.env.BASE_URL, Astro.site).href;
 const jsonLd = [
-  { '@context': 'https://schema.org', '@type': 'WebSite', name: t(site, 'name', lang), alternateName: site.short_name, url: origin, inLanguage: lang === 'zh' ? 'zh-Hant' : 'en' },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: t(site, 'name', lang), alternateName: site.short_name, url: origin, inLanguage: zh ? 'zh-Hant' : 'en' },
   {
     '@context': 'https://schema.org', '@type': 'ResearchOrganization', name: site.name_zh, alternateName: [site.name_en, site.short_name], url: origin,
     ...(site.logo ? { logo: new URL(asset(site.logo), Astro.site).href } : {}),
@@ -20,22 +41,102 @@ const jsonLd = [
     ...(site.institution_zh ? { parentOrganization: { '@type': 'CollegeOrUniversity', name: site.institution_zh } } : {})
   }
 ];
-const intro = t(site, 'intro', lang);
 ---
 <Base lang={lang} path="" navId="" jsonLd={jsonLd}>
-  <PageBanner lang={lang} zh={site.name_zh} en={site.name_en} />
-  <div class="container narrow">
-    <section>
-      <h2 class="section-title">{ui.latest}</h2>
-      <NewsRows list={news} lang={lang} />
-      <a class="btn btn-block" href={href('achievements/', lang)}>{ui.seeMore} →</a>
+  <section class="hero">
+    <Stars count={110} />
+    <NetworkArt class="art-left" />
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <p class="eyebrow">{site.short_name}</p>
+        <h1 class="hero-title">{zh ? titleParts.map((p) => <span>{p}</span>) : site.name_en}</h1>
+        {zh && <p class="hero-en" lang="en">{site.tagline_en_full}</p>}
+        {t(site, 'hero_lead', lang) && <p class="hero-lead">{t(site, 'hero_lead', lang)}</p>}
+        <div class="hero-actions">
+          <a class="btn" href={href('news/', lang)}>{zh ? '最新消息' : 'Latest News'}</a>
+          <a class="btn btn-ghost" href={href('introduction/', lang)}>{zh ? '認識實驗室' : 'About the Lab'}</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <NetworkArt class="art-hero" />
+        {(site.logo_hero || site.logo) && <img class="hero-logo" src={asset(site.logo_hero || site.logo)} alt={site.short_name} width="608" height="320">}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <header class="sec-head reveal">
+        <div><p class="eyebrow">News</p><h2>{ui.latest}</h2></div>
+        <a class="more-link" href={href('news/', lang)}>{ui.more}</a>
+      </header>
+      <div class="news-cards">{featured.map((n) => <NewsCard entry={n} lang={lang} />)}</div>
+    </div>
+  </section>
+
+  {site.highlights?.length > 0 && (
+    <section class="section band">
+      <div class="container">
+        <header class="sec-head reveal">
+          <div><p class="eyebrow">Research</p><h2>{zh ? '研究方向' : 'Research Focus'}</h2></div>
+          <a class="more-link" href={href('introduction/', lang)}>{zh ? '實驗室介紹' : 'Introduction'}</a>
+        </header>
+        <div class="research-cards">
+          {site.highlights.map((h: any, i: number) => (
+            <article class="r-card reveal" style={`--d:${i * 90}ms`}>
+              <span class="r-icon"><Icon name={['network', 'simulation', 'ai'][i % 3]} /></span>
+              <span class="r-num">{String(i + 1).padStart(2, '0')}</span>
+              <h3>{t(h, 'title', lang)}</h3>
+              <p>{t(h, 'text', lang)}</p>
+            </article>
+          ))}
+        </div>
+      </div>
     </section>
-    {intro && (
-      <section>
-        <h2 class="section-title">{lang === 'zh' ? '實驗室介紹' : 'Introduction'}</h2>
-        <p>{plain(intro, 200)}</p>
-        <p><a href={href('introduction/', lang)}>{ui.more} →</a></p>
-      </section>
-    )}
-  </div>
+  )}
+
+  <section class="section">
+    <div class="container">
+      <div class="home-split reveal">
+        <div class="split-col">
+          <header class="sec-head"><div><p class="eyebrow">Professor</p><h2>{zh ? '指導教授' : 'Professor'}</h2></div></header>
+          <div class="pi-feature">
+            <div class="pi-head">
+              {prof.photo && <img src={asset(prof.photo)} alt={t(prof, 'name', lang)} width="150" height="150" loading="lazy">}
+              <div>
+                <h3>{t(prof, 'name', lang)}{zh && prof.name_en && <small lang="en">{prof.name_en}</small>}</h3>
+                <p>{t(prof, 'department', lang)} {t(prof, 'title', lang)}</p>
+              </div>
+            </div>
+            {areas.length > 0 && (
+              <div class="pi-block">
+                <h4>{zh ? '研究領域' : 'Research Areas'}</h4>
+                <ul class="pi-tags">{areas.map((a: string) => <li>{a}</li>)}</ul>
+              </div>
+            )}
+            {currentRoles.length > 0 && (
+              <div class="pi-block">
+                <h4>{zh ? '現任' : 'Current Positions'}</h4>
+                <ul class="pi-roles">{currentRoles.map((r: string) => <li>{r}</li>)}</ul>
+              </div>
+            )}
+            <a class="btn" href={href('professor/', lang)}>{zh ? '教授介紹' : 'Profile'} →</a>
+          </div>
+        </div>
+        {photos.length > 0 && (
+          <div class="split-col">
+            <header class="sec-head">
+              <div><p class="eyebrow">Life</p><h2>{zh ? '生活點滴' : 'Life'}</h2></div>
+              <a class="more-link" href={href('life/', lang)}>{ui.more}</a>
+            </header>
+            <div class="photo-mosaic">
+              {photos.map((p) => (
+                <a href={href('life/', lang)}><figure style="margin:0;height:100%"><img src={asset(p.src)} alt={p.title} loading="lazy"><figcaption>{p.title}</figcaption></figure></a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
 </Base>

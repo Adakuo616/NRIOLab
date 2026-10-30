@@ -1,0 +1,18 @@
+---
+// Small line icons in the logo palette for the research cards.
+const { name } = Astro.props as { name: 'network' | 'simulation' | 'ai' };
+---
+<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  {name === 'network' && <>
+    <path d="M12 12 L24 24 L36 12 M24 24 L24 38" /><circle cx="12" cy="12" r="5" fill="var(--logo-green)" stroke="none" />
+    <circle cx="36" cy="12" r="5" fill="var(--logo-green)" stroke="none" /><circle cx="24" cy="38" r="5" fill="var(--logo-green)" stroke="none" /><circle cx="24" cy="24" r="4" />
+  </>}
+  {name === 'simulation' && <>
+    <path d="M8 38 H40" /><path d="M10 32 L18 22 L26 27 L38 12" /><circle cx="38" cy="12" r="4.5" fill="var(--logo-green)" stroke="none" />
+    <path d="M14 38 V34 M22 38 V30 M30 38 V32" />
+  </>}
+  {name === 'ai' && <>
+    <rect x="12" y="12" width="24" height="24" rx="6" /><path d="M20 6 V12 M28 6 V12 M20 36 V42 M28 36 V42 M6 20 H12 M6 28 H12 M36 20 H42 M36 28 H42" />
+    <circle cx="24" cy="24" r="5" fill="var(--logo-green)" stroke="none" />
+  </>}
+</svg>

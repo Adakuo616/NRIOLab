@@ -15,8 +15,8 @@ export const GET: APIRoute = async ({ site }) => {
     '  <url>',
     `    <loc>${abs(href(path, lang))}</loc>`,
     ...(lastmod ? [`    <lastmod>${lastmod}</lastmod>`] : []),
-    ...LANGS.map((l) => `    <xhtml:link rel="alternate" hreflang="${HTML_LANG[l]}" href="${abs(href(path, l))}"/>`),
-    `    <xhtml:link rel="alternate" hreflang="x-default" href="${abs(href(path, 'zh'))}"/>`,
+    ...(LANGS.length > 1 ? [...LANGS.map((l) => `    <xhtml:link rel="alternate" hreflang="${HTML_LANG[l]}" href="${abs(href(path, l))}"/>`),
+      `    <xhtml:link rel="alternate" hreflang="x-default" href="${abs(href(path, 'zh'))}"/>`] : []),
     '  </url>'
   ].join('\n')));
 

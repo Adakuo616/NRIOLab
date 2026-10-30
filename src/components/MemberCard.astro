@@ -10,5 +10,5 @@ const entrance = (y: string) => lang === 'zh' ? y : y.replace('學年度', ' (RO
   {lang === 'zh' && m.name_en && <div class="member-en">{m.name_en}</div>}
   {t(m, 'title', lang) && <div class="muted">{t(m, 'title', lang)}</div>}
   {m.year && <div class="muted">{lang === 'zh' ? '入學：' : 'Entrance: '}{entrance(m.year)}</div>}
-  {!link && m.email && <a class="member-mail" href={`mailto:${m.email}`}>{m.email}</a>}
+  {!link && m.email && <a class="member-mail" href={`mailto:${m.email}`}>{m.email.split('@')[0]}<wbr>@{m.email.split('@')[1]}</a>}
 </Tag>
