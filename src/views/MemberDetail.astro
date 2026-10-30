@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { UI, navItem, t, md, asset, href, site, type Lang } from '../lib/i18n';
+
+const { lang, member: m } = Astro.props as { lang: Lang; member: any };
+const ui = UI[lang];
+const nav = navItem('members');
+const name = t(m, 'name', lang);
+const research = (t(m, 'research', lang) || '').split(/\n+/).map((r: string) => r.replace(/^[-*•]\s*/, '').trim()).filter(Boolean);
+const L = lang === 'zh'
+  ? { entrance: '入學', research: '研究方向', journal: '期刊論文', conference: '研討會論文', thesis: '碩士論文', awards: '獲獎', back: '返回研究團隊' }
+  : { entrance: 'Entrance', research: 'Research Direction', journal: 'Journal', conference: 'Conference', thesis: 'Thesis', awards: 'Award', back: 'Back to members' };
+const sections = (['journal', 'conference', 'thesis', 'awards'] as const).filter((k) => m[k]);
+const path = `members/${m.slug}/`;
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'ProfilePage',
+  mainEntity: {
+    '@type': 'Person', name: m.name_zh, ...(m.name_en ? { alternateName: m.name_en } : {}),
+    ...(m.email ? { email: m.email } : {}), ...(research.length ? { knowsAbout: research } : {}),
+    affiliation: { '@type': 'ResearchOrganization', name: site.name_zh }
+  }
+}];
+const desc = [name, m.name_en, t(m, 'title', lang), research.join(', ')].filter(Boolean).join('｜');
+---
+<Base lang={lang} path={path} navId="members" title={name} description={desc} jsonLd={jsonLd}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} tag="div" />
+  <article class="container narrow member-detail">
+    <Breadcrumb lang={lang} items={[{ name: nav[lang], path: 'members/' }, { name, path }]} />
+    <header class="prof-card">
+      {m.photo ? <img src={asset(m.photo)} alt={name} width="200" height="250"> : <div class="avatar-ph prof-ph" />}
+      <div>
+        <h1 class="prof-name">{name}{lang === 'zh' && m.name_en && <span class="muted"> {m.name_en}</span>}</h1>
+        {t(m, 'title', lang) && <p class="prof-title">{t(m, 'title', lang)}</p>}
+        <dl class="prof-meta">
+          {m.year && <><dt>{L.entrance}</dt><dd>{m.year}</dd></>}
+          {m.email && <><dt>{ui.email}</dt><dd><a href={`mailto:${m.email}`}>{m.email}</a></dd></>}
+        </dl>
+      </div>
+    </header>
+    {research.length > 0 && (
+      <section>
+        <h2 class="section-title">{L.research}</h2>
+        <ul class="research-tags">{research.map((r: string) => <li>{r}</li>)}</ul>
+      </section>
+    )}
+    {sections.map((k) => (
+      <details class="pub-details" open>
+        <summary>{L[k]}</summary>
+        <div class="prose" set:html={md(m[k])} />
+      </details>
+    ))}
+    <p class="back-link"><a href={href('members/', lang)}>← {L.back}</a></p>
+  </article>
+</Base>

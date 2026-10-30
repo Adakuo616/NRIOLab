@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { UI, navItem, t, md, asset, href, fmtDate, isoDate, plain, site, CATEGORY_CLASS, type Lang } from '../lib/i18n';
+import type { News } from '../lib/news';
+
+const { lang, entry } = Astro.props as { lang: Lang; entry: News };
+const ui = UI[lang];
+const d = entry.data;
+const title = t(d, 'title', lang);
+const heading = t(d, 'heading', lang) || title;
+const gallery = (d.images || []).filter(Boolean);
+const body = lang === 'en' && d.body_en ? d.body_en : entry.body || '';
+const path = `news/${entry.id}/`;
+const parent = navItem(d.archived ? 'achievements' : 'news');
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'NewsArticle', headline: title,
+  datePublished: isoDate(d.date), inLanguage: lang === 'zh' ? 'zh-Hant' : 'en',
+  ...((d.image || gallery[0]) ? { image: [d.image, ...gallery].filter(Boolean).map((i) => new URL(asset(i), Astro.site).href) } : {}),
+  author: { '@type': 'Organization', name: t(site, 'name', lang), url: new URL(href('', lang), Astro.site).href },
+  publisher: { '@type': 'Organization', name: t(site, 'name', lang) }
+}];
+---
+<Base lang={lang} path={path} navId="news" title={title} description={plain(body) || undefined} image={d.image || gallery[0]} ogType="article" jsonLd={jsonLd}>
+  <PageBanner lang={lang} zh={navItem('news').zh} en={navItem('news').en} tag="div" />
+  <article class="container narrow article">
+    <Breadcrumb lang={lang} items={[{ name: parent[lang], path: parent.path }, { name: title, path }]} />
+    <div class="meta">
+      <time datetime={isoDate(d.date)}>{fmtDate(d.date)}</time>
+      {d.category && <span class={`cat ${CATEGORY_CLASS[d.category] || ''}`}>【{d.category}】</span>}
+    </div>
+    {d.location && <p class="news-location">{d.location}</p>}
+    <h1 class="article-title">{heading}</h1>
+    {d.image && <img class="article-img" src={asset(d.image)} alt="" width="760" height="428">}
+    <div class="prose" set:html={md(body)} />
+    {gallery.length > 0 && (
+      <div class={`news-gallery n${Math.min(gallery.length, 4)}`}>
+        {gallery.map((src) => <a href={asset(src)} target="_blank" rel="noopener"><img src={asset(src)} alt={heading} loading="lazy"></a>)}
+      </div>
+    )}
+    {d.link && <p><a class="btn" href={d.link} target="_blank" rel="noopener">{ui.link} ↗</a></p>}
+    <p><a href={href(parent.path, lang)}>← {lang === 'zh' ? `返回${parent.zh}` : `Back to ${parent.en}`}</a></p>
+  </article>
+</Base>

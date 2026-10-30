@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { UI, navItem, t, md, asset, plain, type Lang } from '../lib/i18n';
+import prof from '../data/professor.json';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = UI[lang];
+const nav = navItem('professor');
+const name = t(prof, 'name', lang);
+const jsonLd = [{
+  '@context': 'https://schema.org', '@type': 'ProfilePage',
+  mainEntity: { '@type': 'Person', name: prof.name_zh, ...(prof.department_zh ? { worksFor: { '@type': 'CollegeOrUniversity', name: prof.department_zh } } : {}), ...(prof.name_en ? { alternateName: prof.name_en } : {}), jobTitle: t(prof, 'title', lang),
+    ...(prof.email ? { email: prof.email } : {}), ...(prof.photo ? { image: new URL(asset(prof.photo), Astro.site).href } : {}) }
+}];
+---
+<Base lang={lang} path="professor/" navId="professor" title={`${name} ${t(prof, 'title', lang)}`} description={plain(t(prof, 'bio', lang)) || undefined} jsonLd={jsonLd}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} tag="div" />
+  <div class="container narrow">
+    <section class="prof-card">
+      {prof.photo ? <img src={asset(prof.photo)} alt={name} width="200" height="250"> : <div class="avatar-ph prof-ph" />}
+      <div>
+        <h1 class="prof-name">{name}{lang === 'zh' && prof.name_en && <span class="muted"> {prof.name_en}</span>}</h1>
+        <p class="prof-title">{t(prof, 'title', lang)}</p>
+        {t(prof, 'department', lang) && <p class="prof-dept">{t(prof, 'department', lang)}</p>}
+        <dl class="prof-meta">
+          {t(prof, 'office', lang) && <><dt>{lang === 'zh' ? '個人辦公室' : 'Office'}</dt><dd>{t(prof, 'office', lang)}</dd></>}
+          {prof.email && <><dt>{ui.email}</dt><dd><a href={`mailto:${prof.email}`}>{prof.email}</a></dd></>}
+          {prof.phone && <><dt>{ui.phone}</dt><dd>{prof.phone}</dd></>}
+        </dl>
+      </div>
+    </section>
+    {t(prof, 'bio', lang) && <div class="prose" set:html={md(t(prof, 'bio', lang))} />}
+    {prof.sections.map((s: any) => (
+      <section class="prof-section">
+        <h2 class="section-title">{t(s, 'heading', lang)}</h2>
+        <div class="prose timeline" set:html={md(t(s, 'content', lang))} />
+      </section>
+    ))}
+  </div>
+</Base>

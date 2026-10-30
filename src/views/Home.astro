@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import NewsRows from '../components/NewsRows.astro';
+import { UI, t, md, asset, href, site, plain, type Lang } from '../lib/i18n';
+import { getCurrentNews } from '../lib/news';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = UI[lang];
+const news = (await getCurrentNews()).slice(0, 10);
+const origin = new URL(import.meta.env.BASE_URL, Astro.site).href;
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: t(site, 'name', lang), alternateName: site.short_name, url: origin, inLanguage: lang === 'zh' ? 'zh-Hant' : 'en' },
+  {
+    '@context': 'https://schema.org', '@type': 'ResearchOrganization', name: site.name_zh, alternateName: [site.name_en, site.short_name], url: origin,
+    ...(site.logo ? { logo: new URL(asset(site.logo), Astro.site).href } : {}),
+    ...(site.email ? { email: site.email } : {}),
+    ...(site.phone ? { telephone: site.phone } : {}),
+    ...(site.address_zh ? { address: { '@type': 'PostalAddress', streetAddress: site.address_zh, addressLocality: '台北市', addressCountry: 'TW' } } : {}),
+    ...(site.institution_zh ? { parentOrganization: { '@type': 'CollegeOrUniversity', name: site.institution_zh } } : {})
+  }
+];
+const intro = t(site, 'intro', lang);
+---
+<Base lang={lang} path="" navId="" jsonLd={jsonLd}>
+  <PageBanner lang={lang} zh={site.name_zh} en={site.name_en} />
+  <div class="container narrow">
+    <section>
+      <h2 class="section-title">{ui.latest}</h2>
+      <NewsRows list={news} lang={lang} />
+      <a class="btn btn-block" href={href('achievements/', lang)}>{ui.seeMore} →</a>
+    </section>
+    {intro && (
+      <section>
+        <h2 class="section-title">{lang === 'zh' ? '實驗室介紹' : 'Introduction'}</h2>
+        <p>{plain(intro, 200)}</p>
+        <p><a href={href('introduction/', lang)}>{ui.more} →</a></p>
+      </section>
+    )}
+  </div>
+</Base>

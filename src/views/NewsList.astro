@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import NewsRows from '../components/NewsRows.astro';
+import { UI, navItem, href, type Lang } from '../lib/i18n';
+import { getCurrentNews } from '../lib/news';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = UI[lang];
+const nav = navItem('news');
+const news = await getCurrentNews();
+const cats = [...new Set(news.map((n) => n.data.category).filter(Boolean))] as string[];
+---
+<Base lang={lang} path="news/" navId="news" title={nav[lang]}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
+  <div class="container narrow">
+    {cats.length > 1 && (
+      <div class="filters" role="group">
+        <button type="button" class="chip active" data-cat="">{ui.all}</button>
+        {cats.map((c) => <button type="button" class="chip" data-cat={c}>{c}</button>)}
+      </div>
+    )}
+    {news.length ? <NewsRows list={news} lang={lang} /> : <p class="empty">{ui.empty}</p>}
+    <a class="btn btn-block" href={href('achievements/', lang)}>{ui.seeMore} →</a>
+  </div>
+</Base>
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.chip');
+  chips.forEach((chip) => chip.addEventListener('click', () => {
+    const c = chip.dataset.cat;
+    chips.forEach((x) => x.classList.toggle('active', x === chip));
+    document.querySelectorAll<HTMLElement>('.news-rows li').forEach((el) => { el.hidden = !!c && el.dataset.cat !== c; });
+  }));
+</script>

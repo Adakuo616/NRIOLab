@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { UI, navItem, type Lang } from '../lib/i18n';
+import projectsData from '../data/projects.json';
+
+const { lang } = Astro.props as { lang: Lang };
+const ui = UI[lang];
+const nav = navItem('industry-projects');
+const L = lang === 'zh'
+  ? { projects: '計畫一覽', period: '執行期間', sponsor: '委託單位', amount: '計畫金額' }
+  : { projects: 'Project List', period: 'Period', sponsor: 'Sponsor', amount: 'Amount' };
+const projects = [...projectsData.items].sort((a: any, b: any) => (+b.year || 0) - (+a.year || 0));
+const years = [...new Set(projects.map((p: any) => String(p.year)))];
+---
+<Base lang={lang} path="professor/industry-projects/" navId="industry-projects" title={nav[lang]}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
+  <div class="container narrow">
+    {projects.length ? (
+      <section id="projects">
+        <h2 class="section-title">{L.projects}</h2>
+        <div class="filters" role="group" aria-label={L.projects}>
+          <button type="button" class="chip active" data-year="">{ui.all}</button>
+          {years.map((y) => <button type="button" class="chip" data-year={y}>{y}</button>)}
+        </div>
+        <div class="project-list">
+          {projects.map((p: any) => (
+            <article class="project-card" data-year={String(p.year)}>
+              <h3>{p.title}</h3>
+              <div class="project-meta">
+                {p.role && <span><strong>{p.role}</strong></span>}
+                {p.period && <span><strong>{L.period}：</strong>{p.period}</span>}
+                {p.sponsor && <span><strong>{L.sponsor}：</strong>{p.sponsor}</span>}
+                {p.amount && <span><strong>{L.amount}：</strong>{p.amount}</span>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    ) : <p class="empty">{ui.empty}</p>}
+  </div>
+</Base>
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('#projects .chip');
+  chips.forEach((chip) => chip.addEventListener('click', () => {
+    const y = chip.dataset.year;
+    chips.forEach((x) => x.classList.toggle('active', x === chip));
+    document.querySelectorAll<HTMLElement>('.project-card').forEach((el) => { el.hidden = !!y && el.dataset.year !== y; });
+  }));
+</script>

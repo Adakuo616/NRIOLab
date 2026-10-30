@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import NewsRows from '../components/NewsRows.astro';
+import { UI, navItem, type Lang } from '../lib/i18n';
+import { getArchivedNews } from '../lib/news';
+
+const { lang } = Astro.props as { lang: Lang };
+const nav = navItem('achievements');
+const news = await getArchivedNews();
+---
+<Base lang={lang} path="achievements/" navId="achievements" title={nav[lang]}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
+  <div class="container narrow">
+    {news.length ? <NewsRows list={news} lang={lang} /> : <p class="empty">{UI[lang].empty}</p>}
+  </div>
+</Base>

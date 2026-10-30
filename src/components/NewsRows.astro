@@ -1,0 +1,21 @@
+---
+import { t, asset, href, fmtDate, isoDate, CATEGORY_CLASS, UI, type Lang } from '../lib/i18n';
+import type { News } from '../lib/news';
+const { list, lang } = Astro.props as { list: News[]; lang: Lang };
+---
+<ul class="news-rows">
+  {list.map((n) => {
+    const d = n.data;
+    return (
+      <li data-cat={d.category || ''}>
+        <time datetime={isoDate(d.date)}>{fmtDate(d.date)}</time>
+        <div class="news-main">
+          {d.category && <span class={`cat ${CATEGORY_CLASS[d.category] || ''}`}>【{d.category}】</span>}
+          {d.pinned && <span class="cat cat-pin">{UI[lang].pinned}</span>}
+          <a href={href(`news/${n.id}/`, lang)}>{t(d, 'title', lang)}</a>
+        </div>
+        {d.image && <img src={asset(d.image)} alt="" loading="lazy" width="120" height="80">}
+      </li>
+    );
+  })}
+</ul>

@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { UI, navItem, t, md, asset, plain, site, type Lang } from '../lib/i18n';
+import research from '../data/research.json';
+
+const { lang } = Astro.props as { lang: Lang };
+const nav = navItem('introduction');
+const intro = t(site, 'intro', lang);
+---
+<Base lang={lang} path="introduction/" navId="introduction" title={nav[lang]} description={plain(intro) || undefined}>
+  <PageBanner lang={lang} zh={site.name_zh_full || nav.zh} en={site.tagline_en_full || nav.en} />
+  <div class="container narrow">
+    {t(site, 'intro_title', lang) && <h2 class="section-title">{t(site, 'intro_title', lang)}</h2>}
+    <div class="prose intro-text" set:html={md(intro)} />
+    {site.intro_figure && (
+      <figure class="intro-figure">
+        <img src={asset(site.intro_figure)} alt={t(site, 'intro_figure_caption', lang)} loading="lazy">
+        {t(site, 'intro_figure_caption', lang) && <figcaption>{t(site, 'intro_figure_caption', lang)}</figcaption>}
+      </figure>
+    )}
+    {research.items.length > 0 && (
+      <section>
+        <h2 class="section-title">{UI[lang].research}</h2>
+        <div class="research-list">
+          {research.items.map((r: any) => (
+            <article class={`research-item${r.image ? ' has-img' : ''}`}>
+              {r.image && <img src={asset(r.image)} alt={t(r, 'title', lang)} loading="lazy" width="300" height="225">}
+              <div><h3>{t(r, 'title', lang)}</h3><div class="prose" set:html={md(t(r, 'summary', lang))} /></div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</Base>
