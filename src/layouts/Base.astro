@@ -21,7 +21,7 @@ const fullTitle = title ? `${title}｜${name}` : name;
 const desc = description || t(site, 'description', lang);
 const abs = (p: string) => new URL(p, Astro.site).href;
 const canonical = abs(href(path, lang));
-const ogImage = image || site.logo;
+const ogImage = image || site.share_image || site.logo;
 const other: Lang = lang === 'zh' ? 'en' : 'zh';
 ---
 <!doctype html>
@@ -42,6 +42,8 @@ const other: Lang = lang === 'zh' ? 'en' : 'zh';
   <meta property="og:url" content={canonical}>
   <meta property="og:locale" content={OG_LOCALE[lang]}>
   {ogImage && <meta property="og:image" content={abs(asset(ogImage))}>}
+  {ogImage && ogImage === site.share_image && <><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"></>}
+  {ogImage && <meta property="og:image:alt" content={name}>}
   <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'}>
   {site.logo && <link rel="icon" href={asset(site.logo)}>}
   <link rel="sitemap" href={abs(`${import.meta.env.BASE_URL}sitemap.xml`)}>
