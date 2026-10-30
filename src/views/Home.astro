@@ -15,13 +15,13 @@ const zh = lang === 'zh';
 
 const withPhoto = (await getCurrentNews()).filter((n) => n.data.images?.length);
 const featured = withPhoto.slice(0, 3);
-// Professor card details come from the professor page data: research areas and current (「迄今」) roles.
+// Professor card details come from the professor page data: research areas and the current (「迄今」) position.
 const section = (zhHeading: string) => prof.sections.find((x: any) => x.heading_zh === zhHeading);
 const areas = (t(section('研究領域'), 'content', lang) || '').split(/[、,，]/).map((x: string) => x.trim()).filter(Boolean);
-const currentRoles = ['經歷', '學術服務'].flatMap((h) => (t(section(h), 'content', lang) || '').split('\n'))
+const currentRoles = ['經歷'].flatMap((h) => (t(section(h), 'content', lang) || '').split('\n'))
   .filter((line: string) => line.includes('迄今'))
   .map((line: string) => line.replace(/^-\s*\*\*[^*]+\*\*\s*/, '').replace(/\s{2,}/g, ' ').trim())
-  .slice(0, 4);
+  .slice(0, 1);
 // One photo per 生活點滴 event for the mosaic.
 const lifePhotos = life.items.flatMap((it: any) => (it.images || []).slice(0, 1).map((src: string) => ({ src, title: t(it, 'title', lang), alt: t(it, 'title', lang) })));
 const photos = lifePhotos.slice(0, 5);

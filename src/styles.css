@@ -568,3 +568,9 @@ a.member-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md);
   .pi-feature .btn { align-self: center; }
 }
 @media (min-width: 900px) { .photo-mosaic { grid-template-rows: repeat(2, 1fr); min-height: 300px; } }
+/* 教授卡片與照片牆等高：照片牆跟著卡片高度伸縮 */
+@media (min-width: 900px) {
+  .home-split { align-items: stretch; }
+  .split-col > .photo-mosaic { min-height: 0; height: 100%; grid-template-rows: 1fr 1fr; }
+  .photo-mosaic a, .photo-mosaic figure { min-height: 0; }
+}
