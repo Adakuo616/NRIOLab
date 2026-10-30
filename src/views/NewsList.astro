@@ -1,27 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
-import NewsCard from '../components/NewsCard.astro';
-import Breadcrumb from '../components/Breadcrumb.astro';
-import { UI, NAV, type Lang } from '../lib/i18n';
+import PageBanner from '../components/PageBanner.astro';
+import NewsRows from '../components/NewsRows.astro';
+import { UI, navItem, type Lang } from '../lib/i18n';
 import { getNews } from '../lib/news';
 
 const { lang } = Astro.props as { lang: Lang };
 const ui = UI[lang];
-const title = NAV[1][lang];
+const nav = navItem('news');
 const news = await getNews();
 const cats = [...new Set(news.map((n) => n.data.category).filter(Boolean))] as string[];
 ---
-<Base lang={lang} path="news/" navId="news" title={title}>
-  <div class="container">
-    <Breadcrumb lang={lang} items={[{ name: title, path: 'news/' }]} />
-    <h1 class="page-title">{title}</h1>
+<Base lang={lang} path="news/" navId="news" title={nav[lang]}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
+  <div class="container narrow">
     {cats.length > 1 && (
       <div class="filters" role="group">
         <button type="button" class="chip active" data-cat="">{ui.all}</button>
         {cats.map((c) => <button type="button" class="chip" data-cat={c}>{c}</button>)}
       </div>
     )}
-    {news.length ? <div class="grid news-grid">{news.map((n) => <NewsCard entry={n} lang={lang} />)}</div> : <p class="empty">{ui.empty}</p>}
+    {news.length ? <NewsRows list={news} lang={lang} /> : <p class="empty">{ui.empty}</p>}
   </div>
 </Base>
 <script>
@@ -29,6 +28,6 @@ const cats = [...new Set(news.map((n) => n.data.category).filter(Boolean))] as s
   chips.forEach((chip) => chip.addEventListener('click', () => {
     const c = chip.dataset.cat;
     chips.forEach((x) => x.classList.toggle('active', x === chip));
-    document.querySelectorAll<HTMLElement>('.news-card').forEach((el) => { el.hidden = !!c && el.dataset.cat !== c; });
+    document.querySelectorAll<HTMLElement>('.news-rows li').forEach((el) => { el.hidden = !!c && el.dataset.cat !== c; });
   }));
 </script>

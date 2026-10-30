@@ -5,7 +5,7 @@ import { getNews } from '../lib/news';
 // One <url> per language version, each listing all alternates (hreflang return tags).
 export const GET: APIRoute = async ({ site }) => {
   const abs = (p: string) => new URL(p, site).href;
-  const pages: { path: string; lastmod?: string }[] = NAV.map((n) => ({ path: n.path }));
+  const pages: { path: string; lastmod?: string }[] = [{ path: '' }, ...NAV.map((n) => ({ path: n.path }))];
   for (const n of await getNews()) pages.push({ path: `news/${n.id}/`, lastmod: isoDate(n.data.date) });
 
   const urls = pages.flatMap(({ path, lastmod }) => LANGS.map((lang) => [

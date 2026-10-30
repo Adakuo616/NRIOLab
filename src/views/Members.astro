@@ -1,19 +1,19 @@
 ---
 import Base from '../layouts/Base.astro';
-import Breadcrumb from '../components/Breadcrumb.astro';
-import { UI, NAV, t, asset, type Lang } from '../lib/i18n';
+import PageBanner from '../components/PageBanner.astro';
+import { UI, navItem, t, asset, type Lang } from '../lib/i18n';
 import data from '../data/members.json';
 
 const { lang } = Astro.props as { lang: Lang };
 const ui = UI[lang];
-const title = NAV[3][lang];
+const nav = navItem('members');
+const title = nav[lang];
 const roles = Object.keys(ui.roles) as (keyof typeof ui.roles)[];
 const groups = roles.map((role) => ({ role, list: data.items.filter((m: any) => m.role === role) })).filter((g) => g.list.length);
 ---
 <Base lang={lang} path="members/" navId="members" title={title}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
   <div class="container">
-    <Breadcrumb lang={lang} items={[{ name: title, path: 'members/' }]} />
-    <h1 class="page-title">{title}</h1>
     {groups.length ? groups.map((g) => (
       <section class="member-group">
         <h2>{ui.roles[g.role]}</h2>

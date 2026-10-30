@@ -1,16 +1,100 @@
 {
   "items": [
     {
-      "name_zh": "（主持人姓名）",
-      "name_en": "(PI Name)",
+      "name_zh": "張秉宸",
+      "name_en": "",
       "role": "pi",
-      "title_zh": "教授",
-      "title_en": "Professor",
+      "title_zh": "指導教授",
+      "title_en": "",
+      "year": "",
       "research_zh": "",
       "research_en": "",
       "email": "",
-      "photo": "",
-      "year": ""
+      "photo": ""
+    },
+    {
+      "name_zh": "郭玟慧",
+      "name_en": "",
+      "role": "phd",
+      "title_zh": "博士班",
+      "title_en": "",
+      "year": "",
+      "research_zh": "",
+      "research_en": "",
+      "email": "",
+      "photo": ""
+    },
+    {
+      "name_zh": "劉承宜",
+      "name_en": "",
+      "role": "master",
+      "title_zh": "碩士班",
+      "title_en": "",
+      "year": "",
+      "research_zh": "",
+      "research_en": "",
+      "email": "",
+      "photo": ""
+    },
+    {
+      "name_zh": "吳致廷",
+      "name_en": "",
+      "role": "master",
+      "title_zh": "碩士班",
+      "title_en": "",
+      "year": "",
+      "research_zh": "",
+      "research_en": "",
+      "email": "",
+      "photo": ""
+    },
+    {
+      "name_zh": "陳沿佑",
+      "name_en": "",
+      "role": "master",
+      "title_zh": "碩士班",
+      "title_en": "",
+      "year": "",
+      "research_zh": "",
+      "research_en": "",
+      "email": "",
+      "photo": ""
+    },
+    {
+      "name_zh": "王曼瑩",
+      "name_en": "",
+      "role": "undergrad",
+      "title_zh": "大學部專題生",
+      "title_en": "",
+      "year": "",
+      "research_zh": "",
+      "research_en": "",
+      "email": "",
+      "photo": ""
+    },
+    {
+      "name_zh": "吳奕均",
+      "name_en": "",
+      "role": "undergrad",
+      "title_zh": "大學部專題生",
+      "title_en": "",
+      "year": "",
+      "research_zh": "",
+      "research_en": "",
+      "email": "",
+      "photo": ""
+    },
+    {
+      "name_zh": "陳彥慈",
+      "name_en": "",
+      "role": "undergrad",
+      "title_zh": "大學部專題生",
+      "title_en": "",
+      "year": "",
+      "research_zh": "",
+      "research_en": "",
+      "email": "",
+      "photo": ""
     }
   ]
 }

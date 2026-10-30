@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { UI, navItem, t, md, asset, type Lang } from '../lib/i18n';
+import life from '../data/life.json';
+
+const { lang } = Astro.props as { lang: Lang };
+const nav = navItem('life');
+const items = [...life.items].sort((a: any, b: any) => String(b.date || '').localeCompare(String(a.date || '')));
+---
+<Base lang={lang} path="life/" navId="life" title={nav[lang]}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
+  <div class="container">
+    {items.length ? items.map((it: any) => (
+      <article class="life-item">
+        <header>
+          {it.date && <time datetime={it.date}>{String(it.date).replace(/-/g, '.')}</time>}
+          <h2>{t(it, 'title', lang)}</h2>
+        </header>
+        {t(it, 'description', lang) && <div class="prose" set:html={md(t(it, 'description', lang))} />}
+        {it.images?.length > 0 && (
+          <div class="gallery">
+            {it.images.map((src: string) => <a href={asset(src)} target="_blank" rel="noopener"><img src={asset(src)} alt={t(it, 'title', lang)} loading="lazy" width="400" height="300"></a>)}
+          </div>
+        )}
+      </article>
+    )) : <p class="empty">{UI[lang].empty}</p>}
+  </div>
+</Base>

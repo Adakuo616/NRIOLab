@@ -1,11 +1,3 @@
 {
-  "items": [
-    {
-      "title_zh": "研究方向一（範例）",
-      "title_en": "Research Topic 1 (sample)",
-      "summary_zh": "請於後台「研究方向」中修改此段說明。",
-      "summary_en": "Edit this description in Admin → Research.",
-      "image": ""
-    }
-  ]
+  "items": []
 }

@@ -6,5 +6,5 @@ export type News = CollectionEntry<'news'>;
 export async function getNews(): Promise<News[]> {
   const all = await getCollection('news');
   return all.sort((a, b) =>
-    Number(!!b.data.pinned) - Number(!!a.data.pinned) || b.data.date.getTime() - a.data.date.getTime());
+    Number(!!b.data.pinned) - Number(!!a.data.pinned) || b.data.date.getTime() - a.data.date.getTime() || b.id.localeCompare(a.id));
 }

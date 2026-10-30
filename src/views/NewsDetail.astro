@@ -1,7 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
-import { UI, NAV, t, md, asset, href, fmtDate, isoDate, plain, site, type Lang } from '../lib/i18n';
+import PageBanner from '../components/PageBanner.astro';
+import { UI, navItem, t, md, asset, href, fmtDate, isoDate, plain, site, CATEGORY_CLASS, type Lang } from '../lib/i18n';
 import type { News } from '../lib/news';
 
 const { lang, entry } = Astro.props as { lang: Lang; entry: News };
@@ -19,13 +20,14 @@ const jsonLd = [{
 }];
 ---
 <Base lang={lang} path={path} navId="news" title={title} description={plain(body) || undefined} image={d.image} ogType="article" jsonLd={jsonLd}>
-  <article class="container article">
-    <Breadcrumb lang={lang} items={[{ name: NAV[1][lang], path: 'news/' }, { name: title, path }]} />
+  <PageBanner lang={lang} zh={navItem('news').zh} en={navItem('news').en} tag="div" />
+  <article class="container narrow article">
+    <Breadcrumb lang={lang} items={[{ name: navItem('news')[lang], path: 'news/' }, { name: title, path }]} />
     <div class="meta">
       <time datetime={isoDate(d.date)}>{fmtDate(d.date)}</time>
-      {d.category && <span class="tag">{d.category}</span>}
+      {d.category && <span class={`cat ${CATEGORY_CLASS[d.category] || ''}`}>【{d.category}】</span>}
     </div>
-    <h1 class="page-title">{title}</h1>
+    <h1 class="article-title">{title}</h1>
     {d.image && <img class="article-img" src={asset(d.image)} alt="" width="760" height="428">}
     <div class="prose" set:html={md(body)} />
     {d.link && <p><a class="btn" href={d.link} target="_blank" rel="noopener">{ui.link} ↗</a></p>}

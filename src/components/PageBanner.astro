@@ -1,0 +1,13 @@
+---
+import { asset, site, type Lang } from '../lib/i18n';
+const { lang, zh, en, tag = 'h1' } = Astro.props as { lang: Lang; zh: string; en: string; tag?: 'h1' | 'div' };
+const Tag = tag;
+const bg = site.banner_image ? `background-image:url('${asset(site.banner_image)}')` : undefined;
+---
+<section class="page-banner" style={bg}>
+  <div class="container">
+    <Tag class="banner-title">{lang === 'zh' ? zh : en}</Tag>
+    {lang === 'zh' && en && <p class="banner-sub" lang="en">{en}</p>}
+    <slot />
+  </div>
+</section>

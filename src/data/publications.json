@@ -1,12 +1,3 @@
 {
-  "items": [
-    {
-      "year": 2026,
-      "type": "journal",
-      "authors": "Author A, Author B",
-      "title": "Sample publication title (edit in Admin → Publications)",
-      "venue": "Journal Name",
-      "link": ""
-    }
-  ]
+  "items": []
 }

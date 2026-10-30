@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { UI, navItem, t, md, asset, plain, site, type Lang } from '../lib/i18n';
+import research from '../data/research.json';
+
+const { lang } = Astro.props as { lang: Lang };
+const nav = navItem('introduction');
+const intro = t(site, 'intro', lang);
+---
+<Base lang={lang} path="introduction/" navId="introduction" title={nav[lang]} description={plain(intro) || undefined}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
+  <div class="container narrow">
+    <div class="prose" set:html={md(intro)} />
+    {research.items.length > 0 && (
+      <section>
+        <h2 class="section-title">{UI[lang].research}</h2>
+        <div class="research-list">
+          {research.items.map((r: any) => (
+            <article class={`research-item${r.image ? ' has-img' : ''}`}>
+              {r.image && <img src={asset(r.image)} alt={t(r, 'title', lang)} loading="lazy" width="300" height="225">}
+              <div><h3>{t(r, 'title', lang)}</h3><div class="prose" set:html={md(t(r, 'summary', lang))} /></div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+</Base>

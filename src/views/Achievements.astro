@@ -1,20 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
-import Breadcrumb from '../components/Breadcrumb.astro';
-import { UI, NAV, type Lang } from '../lib/i18n';
+import PageBanner from '../components/PageBanner.astro';
+import { UI, navItem, type Lang } from '../lib/i18n';
 import data from '../data/publications.json';
 
 const { lang } = Astro.props as { lang: Lang };
 const ui = UI[lang];
-const title = NAV[4][lang];
+const nav = navItem('achievements');
+const title = nav[lang];
 const list = [...data.items].sort((a: any, b: any) => (+b.year || 0) - (+a.year || 0));
 const types = Object.keys(ui.pubTypes) as (keyof typeof ui.pubTypes)[];
 const groups = types.map((type) => ({ type, list: list.filter((p: any) => (p.type || 'other') === type) })).filter((g) => g.list.length);
 ---
-<Base lang={lang} path="publications/" navId="publications" title={title}>
-  <div class="container">
-    <Breadcrumb lang={lang} items={[{ name: title, path: 'publications/' }]} />
-    <h1 class="page-title">{title}</h1>
+<Base lang={lang} path="achievements/" navId="achievements" title={title}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
+  <div class="container narrow">
     {groups.length ? (
       <>
         <input class="search" type="search" placeholder={ui.search} aria-label={ui.search}>

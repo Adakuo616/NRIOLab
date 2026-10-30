@@ -21,30 +21,138 @@ collections:
     slug:
       template: "{{year}}-{{month}}-{{day}}-{{fields.title_zh}}"
       editable: [create]
-    summary: "{{date}}｜{{title_zh}}"
+    summary: "{{date}}【{{category}}】{{title_zh}}"
     sortable_fields: [date, title_zh]
     fields:
       - { name: title_zh, label: 標題（中文） }
       - { name: title_en, label: 標題（英文，可留空）, required: false }
       - { name: date, label: 日期, widget: datetime, time_format: false, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" }
-      - { name: category, label: 分類, widget: select, options: [公告, 活動, 榮譽, 招生, 演講, 其他], default: 公告 }
+      - { name: category, label: 分類, widget: select, options: [研討會, 賀！, 公告, 活動, 演講, 招生, 其他], default: 研討會, hint: "研討會＝橘色、賀！＝紅色" }
       - { name: pinned, label: 置頂, widget: boolean, default: false }
-      - { name: image, label: 封面圖片, widget: image, required: false }
+      - { name: image, label: 圖片, widget: image, required: false }
       - { name: link, label: 外部連結, required: false }
       - { name: body, label: 內容（中文）, widget: markdown, required: false }
       - { name: body_en, label: 內容（英文，可留空）, widget: markdown, required: false }
 
-  - name: content
-    label: 網站內容
+  - name: pages
+    label: 頁面內容
     files:
+      - name: professor
+        label: 指導教授
+        file: src/data/professor.json
+        fields:
+          - { name: name_zh, label: 姓名（中文） }
+          - { name: name_en, label: 姓名（英文）, required: false }
+          - { name: title_zh, label: 職稱（中文） }
+          - { name: title_en, label: 職稱（英文）, required: false }
+          - { name: photo, label: 照片, widget: image, required: false }
+          - { name: email, label: Email, required: false }
+          - { name: phone, label: 電話, required: false }
+          - { name: office_zh, label: 研究室（中文）, required: false }
+          - { name: office_en, label: 研究室（英文）, required: false }
+          - { name: bio_zh, label: 簡介（中文）, widget: markdown, required: false }
+          - { name: bio_en, label: 簡介（英文）, widget: markdown, required: false }
+          - name: sections
+            label: 其他段落
+            label_singular: 段落
+            widget: list
+            required: false
+            hint: "例如：學歷、經歷、研究專長、榮譽"
+            summary: "{{fields.heading_zh}}"
+            fields:
+              - { name: heading_zh, label: 標題（中文） }
+              - { name: heading_en, label: 標題（英文）, required: false }
+              - { name: content_zh, label: 內容（中文）, widget: markdown }
+              - { name: content_en, label: 內容（英文）, widget: markdown, required: false }
+
+      - name: members
+        label: 研究團隊
+        file: src/data/members.json
+        fields:
+          - name: items
+            label: 成員列表
+            label_singular: 成員
+            widget: list
+            summary: "{{fields.name_zh}}｜{{fields.title_zh}}"
+            fields:
+              - { name: name_zh, label: 姓名（中文） }
+              - { name: name_en, label: 姓名（英文）, required: false }
+              - name: role
+                label: 身分（決定分組）
+                widget: select
+                default: master
+                options:
+                  - { label: 指導教授, value: pi }
+                  - { label: 博士後研究員, value: postdoc }
+                  - { label: 博士生, value: phd }
+                  - { label: 碩士生, value: master }
+                  - { label: 大學部專題生, value: undergrad }
+                  - { label: 研究助理, value: assistant }
+                  - { label: 畢業校友, value: alumni }
+              - { name: title_zh, label: 職稱／年級（中文）, required: false, hint: "例如：碩二、博士班" }
+              - { name: title_en, label: 職稱／年級（英文）, required: false }
+              - { name: year, label: 入學／畢業年度, required: false }
+              - { name: research_zh, label: 研究主題（中文）, required: false }
+              - { name: research_en, label: 研究主題（英文）, required: false }
+              - { name: email, label: Email, required: false }
+              - { name: photo, label: 照片, widget: image, required: false }
+
+      - name: life
+        label: 生活點滴
+        file: src/data/life.json
+        fields:
+          - name: items
+            label: 活動列表
+            label_singular: 活動
+            widget: list
+            add_to_top: true
+            summary: "{{fields.date}}｜{{fields.title_zh}}"
+            fields:
+              - { name: date, label: 日期, widget: datetime, time_format: false, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" }
+              - { name: title_zh, label: 標題（中文） }
+              - { name: title_en, label: 標題（英文）, required: false }
+              - { name: description_zh, label: 說明（中文）, widget: markdown, required: false }
+              - { name: description_en, label: 說明（英文）, widget: markdown, required: false }
+              - { name: images, label: 照片（可多張）, widget: image, multiple: true, required: false }
+
+      - name: achievements
+        label: 過往成果
+        file: src/data/publications.json
+        fields:
+          - name: items
+            label: 成果列表
+            label_singular: 成果
+            widget: list
+            add_to_top: true
+            summary: "{{fields.year}}｜{{fields.title}}"
+            fields:
+              - { name: year, label: 年份, widget: number, value_type: int }
+              - name: type
+                label: 類型
+                widget: select
+                default: conference
+                options:
+                  - { label: 獲獎, value: award }
+                  - { label: 期刊論文, value: journal }
+                  - { label: 研討會論文, value: conference }
+                  - { label: 研究計畫, value: project }
+                  - { label: 專利, value: patent }
+                  - { label: 專書／章節, value: book }
+                  - { label: 其他, value: other }
+              - { name: title, label: 題目／名稱 }
+              - { name: authors, label: 作者／成員, required: false }
+              - { name: venue, label: 期刊／會議／單位, required: false }
+              - { name: link, label: 連結（DOI 等）, required: false }
+
       - name: research
-        label: 研究方向
+        label: 研究方向（顯示在實驗室介紹頁）
         file: src/data/research.json
         fields:
           - name: items
             label: 研究方向
             label_singular: 研究主題
             widget: list
+            required: false
             summary: "{{fields.title_zh}}"
             fields:
               - { name: title_zh, label: 名稱（中文） }
@@ -53,92 +161,29 @@ collections:
               - { name: summary_en, label: 說明（英文）, widget: markdown, required: false }
               - { name: image, label: 圖片, widget: image, required: false }
 
-      - name: members
-        label: 實驗室成員
-        file: src/data/members.json
-        fields:
-          - name: items
-            label: 成員列表
-            label_singular: 成員
-            widget: list
-            summary: "{{fields.name_zh}}（{{fields.role}}）"
-            fields:
-              - { name: name_zh, label: 姓名（中文） }
-              - { name: name_en, label: 姓名（英文）, required: false }
-              - name: role
-                label: 身分
-                widget: select
-                default: master
-                options:
-                  - { label: 主持人, value: pi }
-                  - { label: 博士後研究員, value: postdoc }
-                  - { label: 博士生, value: phd }
-                  - { label: 碩士生, value: master }
-                  - { label: 大學部專題生, value: undergrad }
-                  - { label: 研究助理, value: assistant }
-                  - { label: 畢業校友, value: alumni }
-              - { name: title_zh, label: 職稱／年級（中文）, required: false, hint: "例如：碩二、教授" }
-              - { name: title_en, label: 職稱／年級（英文）, required: false }
-              - { name: year, label: 入學／畢業年度, required: false }
-              - { name: research_zh, label: 研究主題（中文）, required: false }
-              - { name: research_en, label: 研究主題（英文）, required: false }
-              - { name: email, label: Email, required: false }
-              - { name: photo, label: 照片, widget: image, required: false }
-
-      - name: publications
-        label: 研究成果
-        file: src/data/publications.json
-        fields:
-          - name: items
-            label: 著作列表
-            label_singular: 著作
-            widget: list
-            summary: "{{fields.year}}｜{{fields.title}}"
-            add_to_top: true
-            fields:
-              - { name: year, label: 年份, widget: number, value_type: int }
-              - name: type
-                label: 類型
-                widget: select
-                default: journal
-                options:
-                  - { label: 期刊論文, value: journal }
-                  - { label: 研討會論文, value: conference }
-                  - { label: 專利, value: patent }
-                  - { label: 專書／章節, value: book }
-                  - { label: 其他, value: other }
-              - { name: authors, label: 作者 }
-              - { name: title, label: 題目 }
-              - { name: venue, label: 期刊／會議名稱, required: false }
-              - { name: link, label: 連結（DOI 等）, required: false }
-
   - name: settings
     label: 網站設定
     files:
       - name: site
-        label: 基本資料與實驗室介紹
+        label: 基本資料、實驗室介紹、聯絡資訊
         file: src/data/site.json
         fields:
           - { name: name_zh, label: 實驗室名稱（中文） }
           - { name: name_en, label: 實驗室名稱（英文） }
-          - { name: tagline_zh, label: 首頁標語（中文）, required: false }
-          - { name: tagline_en, label: 首頁標語（英文）, required: false }
-          - { name: description_zh, label: 網站簡介（中文，Google 搜尋結果顯示）, widget: text, hint: "約 80–120 字，描述實驗室在做什麼" }
-          - { name: description_en, label: 網站簡介（英文）, widget: text, required: false }
+          - { name: short_name, label: 簡稱, default: NRIO Lab }
           - { name: logo, label: LOGO, widget: image, required: false }
-          - { name: institution_zh, label: 所屬單位（中文）, required: false, hint: "例如：○○大學○○學系" }
-          - { name: institution_en, label: 所屬單位（英文）, required: false }
-          - { name: hero_image, label: 首頁橫幅圖片, widget: image, required: false }
+          - { name: banner_image, label: 頁面橫幅背景（星空圖）, widget: image, required: false }
+          - { name: tagline_zh, label: 標語（中文）, required: false }
+          - { name: tagline_en, label: 標語（英文）, required: false }
           - { name: intro_zh, label: 實驗室介紹（中文）, widget: markdown }
           - { name: intro_en, label: 實驗室介紹（英文）, widget: markdown, required: false }
-          - { name: pi_name_zh, label: 主持人姓名（中文）, required: false }
-          - { name: pi_name_en, label: 主持人姓名（英文）, required: false }
-          - { name: pi_title_zh, label: 主持人職稱（中文）, required: false }
-          - { name: pi_title_en, label: 主持人職稱（英文）, required: false }
-          - { name: pi_photo, label: 主持人照片, widget: image, required: false }
-          - { name: address_zh, label: 地址（中文）, required: false }
-          - { name: address_en, label: 地址（英文）, required: false }
-          - { name: email, label: 聯絡 Email, required: false }
-          - { name: phone, label: 電話, required: false }
-          - { name: map_query, label: 地圖搜尋字串, required: false, hint: "填入地址或地點名稱，聯絡頁會顯示 Google 地圖；留空則不顯示" }
+          - { name: description_zh, label: 網站簡介（中文，顯示在 Google 搜尋結果）, widget: text, hint: "約 80–120 字" }
+          - { name: description_en, label: 網站簡介（英文）, widget: text, required: false }
+          - { name: institution_zh, label: 所屬學校／系所（中文）, required: false }
+          - { name: institution_en, label: 所屬學校／系所（英文）, required: false }
+          - { name: address_zh, label: 研究室地址（中文）, required: false }
+          - { name: address_en, label: 研究室地址（英文）, required: false }
+          - { name: email, label: 研究室信箱, required: false }
+          - { name: phone, label: 研究室電話, required: false }
+          - { name: map_query, label: 地圖搜尋字串（保留欄位）, required: false }
           - { name: google_site_verification, label: Google Search Console 驗證碼, required: false, hint: "只填 content 的值" }

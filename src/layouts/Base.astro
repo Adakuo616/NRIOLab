@@ -21,7 +21,7 @@ const fullTitle = title ? `${title}｜${name}` : name;
 const desc = description || t(site, 'description', lang);
 const abs = (p: string) => new URL(p, Astro.site).href;
 const canonical = abs(href(path, lang));
-const ogImage = image || site.hero_image || site.logo;
+const ogImage = image || site.banner_image || site.logo;
 const other: Lang = lang === 'zh' ? 'en' : 'zh';
 ---
 <!doctype html>
@@ -53,28 +53,35 @@ const other: Lang = lang === 'zh' ? 'en' : 'zh';
 <body>
   <a class="skip" href="#main">{lang === 'zh' ? '跳到主要內容' : 'Skip to content'}</a>
   <header class="site-header">
-    <div class="container header-inner">
+    <div class="header-inner">
       <a class="brand" href={href('', lang)}>
-        {site.logo && <img src={asset(site.logo)} alt="" width="36" height="36">}
+        {site.logo && <img src={asset(site.logo)} alt={site.short_name} width="82" height="40">}
         <span>{name}</span>
       </a>
       <button class="nav-toggle" type="button" aria-label={ui.menu} aria-expanded="false" aria-controls="nav"><span></span><span></span><span></span></button>
       <nav class="nav" id="nav" aria-label={ui.menu}>
-        {NAV.map((n) => <a href={href(n.path, lang)} aria-current={n.id === navId ? 'page' : undefined}>{n[lang]}</a>)}
+        {NAV.map((n) => (
+          <a href={href(n.path, lang)} aria-current={n.id === navId ? 'page' : undefined}>
+            {n[lang]}{lang === 'zh' && <span class="nav-en"> {n.en}</span>}
+          </a>
+        ))}
         <a class="lang-btn" href={href(path, other)} hreflang={HTML_LANG[other]} lang={HTML_LANG[other]}>{ui.switchLang}</a>
       </nav>
     </div>
   </header>
   <main id="main"><slot /></main>
   <footer class="site-footer">
-    <div class="container footer-inner">
-      <div>
-        <strong>{name}</strong>
-        {t(site, 'institution', lang) && <div>{t(site, 'institution', lang)}</div>}
-        {t(site, 'address', lang) && <div>{t(site, 'address', lang)}</div>}
-        {site.email && <div><a href={`mailto:${site.email}`}>{site.email}</a></div>}
-      </div>
-      <div class="muted">© {new Date().getFullYear()} {name}</div>
+    <div class="container narrow">
+      <section class="footer-contact">
+        <h2>{ui.contact}</h2>
+        {t(site, 'address', lang) && <p>{ui.address}：{t(site, 'address', lang)}</p>}
+        {site.email && <p>{ui.email}：<a href={`mailto:${site.email}`}>{site.email}</a></p>}
+        {site.phone && <p>{ui.phone}：<a href={`tel:${site.phone.replace(/[^0-9+]/g, '')}`}>{site.phone}</a></p>}
+      </section>
+      <nav class="footer-links" aria-label="footer">
+        {NAV.map((n) => <a href={href(n.path, lang)}>{n[lang]}</a>)}
+      </nav>
+      <p class="copyright">© {new Date().getFullYear()} {name}</p>
     </div>
   </footer>
   <script>
