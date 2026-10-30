@@ -2,14 +2,14 @@
   "items": [
     {
       "name_zh": "張秉宸",
-      "name_en": "",
+      "name_en": "Ping-Chen Chang",
       "role": "pi",
-      "title_zh": "指導教授",
+      "title_zh": "教授",
       "title_en": "",
       "year": "",
       "research_zh": "",
       "research_en": "",
-      "email": "",
+      "email": "pcchang@mail.ntust.edu.tw",
       "photo": ""
     },
     {
@@ -18,10 +18,10 @@
       "role": "phd",
       "title_zh": "博士班",
       "title_en": "",
-      "year": "",
-      "research_zh": "",
+      "year": "115學年度",
+      "research_zh": "Monte Carlo simulation\nStochastic network reliability\nProject reliability\nAgent-based modeling and simulation",
       "research_en": "",
-      "email": "",
+      "email": "D11501001@mail.ntust.edu.tw",
       "photo": ""
     },
     {

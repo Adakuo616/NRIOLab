@@ -45,11 +45,13 @@ collections:
           - { name: name_en, label: 姓名（英文）, required: false }
           - { name: title_zh, label: 職稱（中文） }
           - { name: title_en, label: 職稱（英文）, required: false }
+          - { name: department_zh, label: 系所（中文）, required: false }
+          - { name: department_en, label: 系所（英文）, required: false }
           - { name: photo, label: 照片, widget: image, required: false }
-          - { name: email, label: Email, required: false }
-          - { name: phone, label: 電話, required: false }
-          - { name: office_zh, label: 研究室（中文）, required: false }
-          - { name: office_en, label: 研究室（英文）, required: false }
+          - { name: email, label: 電子信箱, required: false }
+          - { name: phone, label: 聯絡電話, required: false }
+          - { name: office_zh, label: 個人辦公室（中文）, required: false }
+          - { name: office_en, label: 個人辦公室（英文）, required: false }
           - { name: bio_zh, label: 簡介（中文）, widget: markdown, required: false }
           - { name: bio_en, label: 簡介（英文）, widget: markdown, required: false }
           - name: sections
@@ -57,7 +59,7 @@ collections:
             label_singular: 段落
             widget: list
             required: false
-            hint: "例如：學歷、經歷、研究專長、榮譽"
+            hint: "例如：學歷、經歷、學術服務、個人榮譽。有日期的項目請寫成「- **2026.08-迄今**　內容」，會顯示成時間軸"
             summary: "{{fields.heading_zh}}"
             fields:
               - { name: heading_zh, label: 標題（中文） }
@@ -91,9 +93,9 @@ collections:
                   - { label: 畢業校友, value: alumni }
               - { name: title_zh, label: 職稱／年級（中文）, required: false, hint: "例如：碩二、博士班" }
               - { name: title_en, label: 職稱／年級（英文）, required: false }
-              - { name: year, label: 入學／畢業年度, required: false }
-              - { name: research_zh, label: 研究主題（中文）, required: false }
-              - { name: research_en, label: 研究主題（英文）, required: false }
+              - { name: year, label: 入學學年度, required: false, hint: "例如：115學年度" }
+              - { name: research_zh, label: 研究方向（中文）, widget: text, required: false, hint: "一行一項" }
+              - { name: research_en, label: 研究方向（英文）, widget: text, required: false, hint: "一行一項" }
               - { name: email, label: Email, required: false }
               - { name: photo, label: 照片, widget: image, required: false }
 
@@ -144,6 +146,24 @@ collections:
               - { name: venue, label: 期刊／會議／單位, required: false }
               - { name: link, label: 連結（DOI 等）, required: false }
 
+      - name: projects
+        label: 計畫一覽（顯示在過往成果頁）
+        file: src/data/projects.json
+        fields:
+          - name: items
+            label: 計畫列表
+            label_singular: 計畫
+            widget: list
+            add_to_top: true
+            summary: "{{fields.year}}｜{{fields.title}}"
+            fields:
+              - { name: year, label: 年份（用於篩選按鈕）, widget: number, value_type: int }
+              - { name: title, label: 計畫名稱 }
+              - { name: role, label: 擔任角色, required: false, hint: "例如：計畫主持人、共同主持人" }
+              - { name: period, label: 執行期間, required: false, hint: "例如：2026.03 – 2026.09" }
+              - { name: sponsor, label: 委託單位, required: false }
+              - { name: amount, label: 計畫金額, required: false, hint: "例如：NT$ 300,000" }
+
       - name: research
         label: 研究方向（顯示在實驗室介紹頁）
         file: src/data/research.json
@@ -173,10 +193,13 @@ collections:
           - { name: short_name, label: 簡稱, default: NRIO Lab }
           - { name: logo, label: LOGO, widget: image, required: false }
           - { name: banner_image, label: 頁面橫幅背景（星空圖）, widget: image, required: false }
-          - { name: tagline_zh, label: 標語（中文）, required: false }
-          - { name: tagline_en, label: 標語（英文）, required: false }
+          - { name: intro_title_zh, label: 介紹標題（中文）, required: false, default: 研究室簡介 }
+          - { name: intro_title_en, label: 介紹標題（英文）, required: false }
           - { name: intro_zh, label: 實驗室介紹（中文）, widget: markdown }
           - { name: intro_en, label: 實驗室介紹（英文）, widget: markdown, required: false }
+          - { name: intro_figure, label: 介紹頁圖片（研究程序圖）, widget: image, required: false }
+          - { name: intro_figure_caption_zh, label: 圖片說明（中文）, required: false }
+          - { name: intro_figure_caption_en, label: 圖片說明（英文）, required: false }
           - { name: description_zh, label: 網站簡介（中文，顯示在 Google 搜尋結果）, widget: text, hint: "約 80–120 字" }
           - { name: description_en, label: 網站簡介（英文）, widget: text, required: false }
           - { name: institution_zh, label: 所屬學校／系所（中文）, required: false }

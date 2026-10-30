@@ -1,14 +1,53 @@
 {
   "name_zh": "張秉宸",
-  "name_en": "",
-  "title_zh": "指導教授",
+  "name_en": "Ping-Chen Chang",
+  "title_zh": "教授",
   "title_en": "Professor",
+  "department_zh": "國立臺灣科技大學 工業管理系",
+  "department_en": "Department of Industrial Management, National Taiwan University of Science and Technology",
   "photo": "",
-  "email": "",
-  "phone": "",
-  "office_zh": "",
-  "office_en": "",
-  "bio_zh": "（請將原網站「指導教授」頁面的內容貼到後台「指導教授」）",
+  "email": "pcchang@mail.ntust.edu.tw",
+  "phone": "(02)2737-6340",
+  "office_zh": "管理學院 MA210",
+  "office_en": "MA210, School of Management",
+  "bio_zh": "",
   "bio_en": "",
-  "sections": []
+  "sections": [
+    {
+      "heading_zh": "研究領域",
+      "heading_en": "Research Areas",
+      "content_zh": "網路可靠度、生產與作業管理、品質管理",
+      "content_en": ""
+    },
+    {
+      "heading_zh": "教授課程",
+      "heading_en": "Courses",
+      "content_zh": "網路可靠度、工業工程概論、物流運籌管理",
+      "content_en": ""
+    },
+    {
+      "heading_zh": "學歷",
+      "heading_en": "Education",
+      "content_zh": "國立臺灣科技大學  工業管理  博士",
+      "content_en": ""
+    },
+    {
+      "heading_zh": "經歷",
+      "heading_en": "Experience",
+      "content_zh": "- **2026.08-迄今**　國立臺灣科技大學  工業管理系  教授\n- **2023.08-2026.07**　國立臺北科技大學  工業工程與管理系  教授\n- **2024.02-2026.07**　國立臺北科技大學  進修部教務組 組長\n- **2023.09-2024.01**　國立臺北科技大學  進修部學務組 組長\n- **2022.08-2023.07**　國立金門大學  工業工程與管理學系  教授\n- **2021.08-2023.07**　國立金門大學  工業工程與管理學系  系主任\n- **2019.08-2022.07**　國立金門大學  工業工程與管理學系  副教授\n- **2019.08-2022.07**　國立金門大學  教務處教學資源中心  主任\n- **2017.08-2019.07**　國立金門大學  教務處課務組 組長\n- **2016.08-2019.07**　國立金門大學  工業工程與管理學系  助理教授",
+      "content_en": ""
+    },
+    {
+      "heading_zh": "學術服務",
+      "heading_en": "Academic Service",
+      "content_zh": "- **2026-迄今**　Sustainable Futures (ESCI), Section Editor\n- **2025-迄今**　Journal of the Chinese Institute of Engineers (SCI), Associate Editor\n- **2022-迄今**　International Journal of Operations Research, Aera Editor\n- **2024-2026**　Sustainable Futures (ESCI), Associate Editor\n- **2023-2024**　Annals of Operations Research (SCI), Guest Editor\n- **2023-2024**　Computers & Industrial Engineering (SCI), Guest Editor\n- **2023-2024**　Mathematics (SCI), Guest Editor\n- **2025.01-2026.12**　中國工業工程學會，秘書長\n- **2024.01-2025.12**　台灣作業研究學會，理事\n- **2023.01-2024.12**　中國工業工程學會，副秘書長\n- **2020.01-2022.12**　科技部工業工程與管理學門，規劃委員\n- **2021.01-2022.12**　中國工業工程學會，金馬澎委員會召集人\n- **2020.01-2021.12**　台灣作業研究學會，理事\n- **2018.01-2019.12**　台灣作業研究學會，副秘書長",
+      "content_en": ""
+    },
+    {
+      "heading_zh": "個人榮譽",
+      "heading_en": "Honors",
+      "content_zh": "- **2024.11**　台灣作業研究學會2024傑出青年學者\n- **2023.12**　中華民國管理科學學會112年度呂鳳章先生紀念獎章\n- **2023.04**　國科會111年度吳大猷先生紀念獎\n- **2022.11**　中國工業工程學會111年度優秀青年工業工程師獎\n- **2022.11**　國立金門大學 110學年度研究傑出獎\n- **2022.11**　國立金門大學 110學年度貢獻傑出獎\n- **2022.11**　國立金門大學 110學年度指導學生傑出獎\n- **2021.12**　科技部 109 年度工工學門成果發表會優等獎\n- **2021.11**　國立金門大學 109 學年度指導學生傑出獎\n- **2021.08**　科技部補助大專校院研究獎勵(2021.08-2022.07)\n- **2020.08**　科技部補助大專校院研究獎勵(2020.08-2021.07)\n- **2019.11**　國立金門大學 107學年度研究傑出獎\n- **2019.08**　科技部補助大專校院研究獎勵(2019.08-2020.07)\n- **2018.11**　國立金門大學 106學年度楊忠禮教學優良獎\n- **2018.11**　國立金門大學 106學年度貢獻傑出獎\n- **2018.08**　科技部補助大專校院研究獎勵(2018.08-2019.07)\n- **2018.02**　國立臺灣科技大學 短期訪問學者(2018.02-2018.07)\n- **2017.10**　國立金門大學 105學年度研究傑出獎\n- **2017.10**　國立金門大學 105學年度貢獻傑出獎",
+      "content_en": ""
+    }
+  ]
 }

@@ -123,7 +123,7 @@ h1, h2, h3 { line-height: 1.35; }
 .prof-card { display: grid; gap: 24px; margin-top: 40px; align-items: start; }
 @media (min-width: 640px) { .prof-card { grid-template-columns: 200px 1fr; } }
 .prof-card img, .prof-ph { width: 200px; height: 250px; object-fit: cover; border-radius: var(--radius); }
-.prof-ph { border-radius: var(--radius); }
+.avatar-ph.prof-ph { border-radius: var(--radius); }
 .prof-name { margin: 0; font-size: 2rem; }
 .prof-name .muted { font-size: .6em; font-weight: 500; }
 .prof-title { margin: 4px 0 16px; color: var(--navy); font-weight: 700; }
@@ -184,3 +184,31 @@ h1, h2, h3 { line-height: 1.35; }
 .copyright { text-align: center; margin: 12px 0 0; font-size: .82rem; }
 .empty-page { text-align: center; padding: 48px 16px; }
 .page-title { font-size: 2rem; }
+
+/* ===== 實驗室介紹 ===== */
+.intro-text { margin-top: 16px; text-align: justify; line-height: 1.95; }
+.intro-figure { margin: 32px 0 0; text-align: center; }
+.intro-figure img { margin: 0 auto; border-radius: 8px; border: 1px solid var(--line); }
+.intro-figure figcaption { margin-top: 10px; color: var(--muted); font-weight: 500; }
+
+/* ===== 指導教授：經歷時間軸 ===== */
+.prof-dept { margin: -8px 0 16px; }
+.prof-section .prose { margin-top: 0; font-size: 1rem; }
+.timeline ul { list-style: none; padding: 0; margin: 0; }
+.timeline li { display: grid; grid-template-columns: 160px 1fr; gap: 12px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+.timeline li strong { color: var(--date); font-weight: 600; white-space: nowrap; }
+.timeline p { margin: 0; }
+@media (max-width: 560px) { .timeline li { grid-template-columns: 1fr; gap: 0; } }
+
+/* ===== 研究團隊：研究方向 ===== */
+.member-research { text-align: left; font-size: .88rem; margin: 10px 0; padding-left: 18px; }
+
+/* ===== 計畫一覽 ===== */
+#projects .filters { margin-top: 0; margin-bottom: 20px; }
+.project-list { display: flex; flex-direction: column; gap: 14px; }
+.project-card { border: 1px solid var(--line); border-radius: 12px; padding: 18px 22px; box-shadow: 0 2px 6px rgba(0, 0, 0, .03); transition: transform .15s, box-shadow .15s; }
+.project-card:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0, 0, 0, .06); }
+.project-card h3 { margin: 0 0 8px; font-size: 1.12rem; }
+.project-meta { font-size: .92rem; color: #4a5568; }
+.project-meta span { display: inline-block; margin-right: 16px; }
+.pub-group h3 { font-size: 1.1rem; margin: 24px 0 8px; }

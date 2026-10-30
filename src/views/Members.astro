@@ -22,8 +22,13 @@ const groups = roles.map((role) => ({ role, list: data.items.filter((m: any) => 
             <div class="card member-card">
               {m.photo ? <img src={asset(m.photo)} alt={t(m, 'name', lang)} loading="lazy" width="112" height="112"> : <div class="avatar-ph" />}
               <h3>{t(m, 'name', lang)}</h3>
-              {[t(m, 'title', lang), m.year].filter(Boolean).length > 0 && <div class="muted">{[t(m, 'title', lang), m.year].filter(Boolean).join(' · ')}</div>}
-              {t(m, 'research', lang) && <p>{t(m, 'research', lang)}</p>}
+              {t(m, 'title', lang) && <div class="muted">{t(m, 'title', lang)}</div>}
+              {m.year && <div class="muted">{lang === 'zh' ? '入學：' : 'Entrance: '}{m.year}</div>}
+              {t(m, 'research', lang) && (
+                <ul class="member-research" aria-label={ui.research}>
+                  {t(m, 'research', lang).split(/\n+/).filter(Boolean).map((r: string) => <li>{r.replace(/^[-*•]\s*/, '')}</li>)}
+                </ul>
+              )}
               {m.email && <a href={`mailto:${m.email}`}>{m.email}</a>}
             </div>
           ))}

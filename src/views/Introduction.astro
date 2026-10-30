@@ -11,7 +11,14 @@ const intro = t(site, 'intro', lang);
 <Base lang={lang} path="introduction/" navId="introduction" title={nav[lang]} description={plain(intro) || undefined}>
   <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
   <div class="container narrow">
-    <div class="prose" set:html={md(intro)} />
+    {t(site, 'intro_title', lang) && <h2 class="section-title">{t(site, 'intro_title', lang)}</h2>}
+    <div class="prose intro-text" set:html={md(intro)} />
+    {site.intro_figure && (
+      <figure class="intro-figure">
+        <img src={asset(site.intro_figure)} alt={t(site, 'intro_figure_caption', lang)} loading="lazy">
+        {t(site, 'intro_figure_caption', lang) && <figcaption>{t(site, 'intro_figure_caption', lang)}</figcaption>}
+      </figure>
+    )}
     {research.items.length > 0 && (
       <section>
         <h2 class="section-title">{UI[lang].research}</h2>

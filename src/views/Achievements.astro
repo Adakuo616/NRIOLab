@@ -3,11 +3,18 @@ import Base from '../layouts/Base.astro';
 import PageBanner from '../components/PageBanner.astro';
 import { UI, navItem, type Lang } from '../lib/i18n';
 import data from '../data/publications.json';
+import projectsData from '../data/projects.json';
 
 const { lang } = Astro.props as { lang: Lang };
 const ui = UI[lang];
 const nav = navItem('achievements');
 const title = nav[lang];
+const L = lang === 'zh'
+  ? { projects: '計畫一覽', period: '執行期間', sponsor: '委託單位', amount: '計畫金額', pubs: '論文與獲獎' }
+  : { projects: 'Research Projects', period: 'Period', sponsor: 'Sponsor', amount: 'Amount', pubs: 'Publications & Awards' };
+
+const projects = [...projectsData.items].sort((a: any, b: any) => (+b.year || 0) - (+a.year || 0));
+const years = [...new Set(projects.map((p: any) => String(p.year)))];
 const list = [...data.items].sort((a: any, b: any) => (+b.year || 0) - (+a.year || 0));
 const types = Object.keys(ui.pubTypes) as (keyof typeof ui.pubTypes)[];
 const groups = types.map((type) => ({ type, list: list.filter((p: any) => (p.type || 'other') === type) })).filter((g) => g.list.length);
@@ -15,18 +22,41 @@ const groups = types.map((type) => ({ type, list: list.filter((p: any) => (p.typ
 <Base lang={lang} path="achievements/" navId="achievements" title={title}>
   <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
   <div class="container narrow">
-    {groups.length ? (
-      <>
+    {projects.length > 0 && (
+      <section id="projects">
+        <h2 class="section-title">{L.projects}</h2>
+        <div class="filters" role="group" aria-label={L.projects}>
+          <button type="button" class="chip active" data-year="">{ui.all}</button>
+          {years.map((y) => <button type="button" class="chip" data-year={y}>{y}</button>)}
+        </div>
+        <div class="project-list">
+          {projects.map((p: any) => (
+            <article class="project-card" data-year={String(p.year)}>
+              <h3>{p.title}</h3>
+              <div class="project-meta">
+                {p.role && <span><strong>{p.role}</strong></span>}
+                {p.period && <span><strong>{L.period}：</strong>{p.period}</span>}
+                {p.sponsor && <span><strong>{L.sponsor}：</strong>{p.sponsor}</span>}
+                {p.amount && <span><strong>{L.amount}：</strong>{p.amount}</span>}
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+    )}
+    {groups.length > 0 && (
+      <section>
+        <h2 class="section-title">{L.pubs}</h2>
         <input class="search" type="search" placeholder={ui.search} aria-label={ui.search}>
         {groups.map((g) => (
           <section class="pub-group">
-            <h2>{ui.pubTypes[g.type]}</h2>
+            <h3>{ui.pubTypes[g.type]}</h3>
             <ol class="pub-list">
               {g.list.map((p: any) => (
                 <li>
                   <span class="pub-year">{p.year}</span>
                   <div>
-                    <div class="pub-authors">{p.authors}</div>
+                    {p.authors && <div class="pub-authors">{p.authors}</div>}
                     <div class="pub-title">{p.link ? <a href={p.link} target="_blank" rel="noopener">{p.title}</a> : p.title}</div>
                     {p.venue && <div class="muted"><em>{p.venue}</em></div>}
                   </div>
@@ -35,11 +65,18 @@ const groups = types.map((type) => ({ type, list: list.filter((p: any) => (p.typ
             </ol>
           </section>
         ))}
-      </>
-    ) : <p class="empty">{ui.empty}</p>}
+      </section>
+    )}
+    {!projects.length && !groups.length && <p class="empty">{ui.empty}</p>}
   </div>
 </Base>
 <script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('#projects .chip');
+  chips.forEach((chip) => chip.addEventListener('click', () => {
+    const y = chip.dataset.year;
+    chips.forEach((x) => x.classList.toggle('active', x === chip));
+    document.querySelectorAll<HTMLElement>('.project-card').forEach((el) => { el.hidden = !!y && el.dataset.year !== y; });
+  }));
   const box = document.querySelector<HTMLInputElement>('.search');
   box?.addEventListener('input', () => {
     const q = box.value.trim().toLowerCase();
