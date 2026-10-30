@@ -9,7 +9,7 @@ const nav = navItem('introduction');
 const intro = t(site, 'intro', lang);
 ---
 <Base lang={lang} path="introduction/" navId="introduction" title={nav[lang]} description={plain(intro) || undefined}>
-  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
+  <PageBanner lang={lang} zh={site.name_zh_full || nav.zh} en={site.tagline_en_full || nav.en} />
   <div class="container narrow">
     {t(site, 'intro_title', lang) && <h2 class="section-title">{t(site, 'intro_title', lang)}</h2>}
     <div class="prose intro-text" set:html={md(intro)} />

@@ -18,7 +18,9 @@
   "google_site_verification": "",
   "intro_title_zh": "研究室簡介",
   "intro_title_en": "About the Lab",
-  "intro_figure": "",
+  "intro_figure": "/images/uploads/research-procedure.jpg",
   "intro_figure_caption_zh": "隨機流量網路可靠度研究程序",
-  "intro_figure_caption_en": ""
+  "intro_figure_caption_en": "",
+  "name_zh_full": "網路可靠度與智慧營運實驗室",
+  "tagline_en_full": "Network Reliability and Intelligent Operations"
 }

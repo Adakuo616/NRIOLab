@@ -1,41 +1,38 @@
 ---
 import Base from '../layouts/Base.astro';
 import PageBanner from '../components/PageBanner.astro';
-import { UI, navItem, t, asset, href, type Lang } from '../lib/i18n';
+import MemberCard from '../components/MemberCard.astro';
+import { UI, navItem, href, type Lang } from '../lib/i18n';
 import data from '../data/members.json';
+import { hasDetail } from '../lib/members';
 
-const { lang } = Astro.props as { lang: Lang };
+const { lang, role: only } = Astro.props as { lang: Lang; role?: string };
 const ui = UI[lang];
-const nav = navItem('members');
+const nav = navItem(only || 'members');
+const navPath = only ? nav.path : 'members/';
 const roles = Object.keys(ui.roles) as (keyof typeof ui.roles)[];
 const yearNum = (y: string) => parseInt(y, 10) || 0;
 // Group by role, then by entrance year (newest first).
-const groups = roles.map((role) => {
+const groups = roles.filter((r) => !only || r === only).map((role) => {
   const list = data.items.filter((m: any) => m.role === role);
   const years = [...new Set(list.map((m: any) => m.year || ''))].sort((a, b) => yearNum(b) - yearNum(a));
   return { role, years: years.map((y) => ({ year: y, list: list.filter((m: any) => (m.year || '') === y) })) };
 }).filter((g) => g.years.length);
-const memberHref = (m: any) => m.role === 'pi' ? href('professor/', lang) : href(`members/${m.slug}/`, lang);
+const memberHref = (m: any) => m.role === 'pi' ? href('professor/', lang) : hasDetail(m) ? href(`members/${m.slug}/`, lang) : undefined;
 const entrance = (y: string) => lang === 'zh' ? y : y.replace('學年度', ' (ROC academic year)');
 ---
-<Base lang={lang} path="members/" navId="members" title={nav[lang]}>
+<Base lang={lang} path={navPath} navId={only || 'members'} title={nav[lang]}>
   <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
   <div class="container">
     {groups.length ? groups.map((g) => (
       <section class="member-group">
-        <h2>{ui.roles[g.role]}</h2>
+        {!only && <h2>{ui.roles[g.role]}</h2>}
         {g.years.map((y) => (
           <>
-            {g.years.length > 1 && y.year && <h3 class="member-year">{entrance(y.year)}</h3>}
+            {(only ? !!y.year : g.years.length > 1 && y.year) && <h3 class="member-year">{entrance(y.year)}</h3>}
             <div class="grid member-grid">
               {y.list.map((m: any) => (
-                <a class="card member-card" href={memberHref(m)}>
-                  {m.photo ? <img src={asset(m.photo)} alt={t(m, 'name', lang)} loading="lazy" width="112" height="112"> : <div class="avatar-ph" />}
-                  <h3>{t(m, 'name', lang)}</h3>
-                  {lang === 'zh' && m.name_en && <div class="member-en">{m.name_en}</div>}
-                  {t(m, 'title', lang) && <div class="muted">{t(m, 'title', lang)}</div>}
-                  {m.year && <div class="muted">{lang === 'zh' ? '入學：' : 'Entrance: '}{entrance(m.year)}</div>}
-                </a>
+                <MemberCard m={m} lang={lang} link={memberHref(m)} />
               ))}
             </div>
           </>

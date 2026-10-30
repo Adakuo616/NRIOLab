@@ -21,14 +21,16 @@
 
 | 要改什麼 | 後台位置 | 檔案位置 |
 |---|---|---|
-| 新增／修改消息 | 最新消息 → New | `src/content/news/*.md` |
-| 指導教授 | 頁面內容 → 指導教授 | `src/data/professor.json` |
-| 研究團隊 | 頁面內容 → 研究團隊 | `src/data/members.json` |
+| 新增／修改消息（含照片） | 最新消息 → New | `src/content/news/*.md` |
+| 把舊消息移到「過往成果」 | 最新消息 → 勾選「移到過往成果」 | 同上 |
+| 指導教授、國科會連結 | 頁面內容 → 指導教授 | `src/data/professor.json` |
+| 產學計畫 | 頁面內容 → 產學計畫 | `src/data/projects.json` |
+| 研究團隊（博士生／碩士生／專題生／畢業生） | 頁面內容 → 研究團隊（改「身分」即可換組） | `src/data/members.json` |
 | 生活點滴（相簿） | 頁面內容 → 生活點滴 | `src/data/life.json` |
-| 過往成果 | 頁面內容 → 過往成果 | `src/data/publications.json` |
-| 研究方向（顯示在實驗室介紹頁） | 頁面內容 → 研究方向 | `src/data/research.json` |
 | 名稱、實驗室介紹、LOGO、橫幅、聯絡資訊、SEO 簡介 | 網站設定 | `src/data/site.json` |
 | 色系 | （改程式） | `src/styles.css` 最上方 `:root` |
+
+學生畢業時，在後台把他的「身分」改成「畢業生」，就會自動移到畢業生頁。
 
 消息分類選「研討會」會顯示橘色【研討會】，選「賀！」會顯示紅色【賀！】，與原網站相同。
 

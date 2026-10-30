@@ -3,11 +3,11 @@ import Base from '../layouts/Base.astro';
 import PageBanner from '../components/PageBanner.astro';
 import NewsRows from '../components/NewsRows.astro';
 import { UI, t, md, asset, href, site, plain, type Lang } from '../lib/i18n';
-import { getNews } from '../lib/news';
+import { getCurrentNews } from '../lib/news';
 
 const { lang } = Astro.props as { lang: Lang };
 const ui = UI[lang];
-const news = (await getNews()).slice(0, 10);
+const news = (await getCurrentNews()).slice(0, 10);
 const origin = new URL(import.meta.env.BASE_URL, Astro.site).href;
 const jsonLd = [
   { '@context': 'https://schema.org', '@type': 'WebSite', name: t(site, 'name', lang), alternateName: site.short_name, url: origin, inLanguage: lang === 'zh' ? 'zh-Hant' : 'en' },
@@ -28,7 +28,7 @@ const intro = t(site, 'intro', lang);
     <section>
       <h2 class="section-title">{ui.latest}</h2>
       <NewsRows list={news} lang={lang} />
-      <a class="btn btn-block" href={href('news/', lang)}>{ui.seeMore} →</a>
+      <a class="btn btn-block" href={href('achievements/', lang)}>{ui.seeMore} →</a>
     </section>
     {intro && (
       <section>

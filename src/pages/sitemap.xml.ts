@@ -1,13 +1,14 @@
 import type { APIRoute } from 'astro';
-import { LANGS, HTML_LANG, NAV, href, isoDate } from '../lib/i18n';
+import { LANGS, HTML_LANG, NAV_PAGES, href, isoDate } from '../lib/i18n';
+import { hasDetail } from '../lib/members';
 import { getNews } from '../lib/news';
 import members from '../data/members.json';
 
 // One <url> per language version, each listing all alternates (hreflang return tags).
 export const GET: APIRoute = async ({ site }) => {
   const abs = (p: string) => new URL(p, site).href;
-  const pages: { path: string; lastmod?: string }[] = [{ path: '' }, ...NAV.map((n) => ({ path: n.path }))];
-  for (const m of members.items as any[]) if (m.role !== 'pi' && m.slug) pages.push({ path: `members/${m.slug}/` });
+  const pages: { path: string; lastmod?: string }[] = [{ path: '' }, ...NAV_PAGES.map((n) => ({ path: n.path }))];
+  for (const m of members.items as any[]) if (hasDetail(m)) pages.push({ path: `members/${m.slug}/` });
   for (const n of await getNews()) pages.push({ path: `news/${n.id}/`, lastmod: isoDate(n.data.date) });
 
   const urls = pages.flatMap(({ path, lastmod }) => LANGS.map((lang) => [

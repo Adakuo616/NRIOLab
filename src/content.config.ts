@@ -7,7 +7,12 @@ const news = defineCollection({
   schema: z.object({
     title_zh: z.string(),
     title_en: z.string().optional().nullable(),
+    heading_zh: z.string().optional().nullable(),
+    heading_en: z.string().optional().nullable(),
+    location: z.string().optional().nullable(),
     date: z.coerce.date(),
+    archived: z.boolean().optional().nullable(),
+    images: z.array(z.string()).optional().nullable(),
     category: z.string().optional().nullable(),
     pinned: z.boolean().optional().nullable(),
     image: z.string().optional().nullable(),

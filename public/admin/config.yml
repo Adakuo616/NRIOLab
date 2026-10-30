@@ -26,10 +26,13 @@ collections:
     fields:
       - { name: title_zh, label: 標題（中文） }
       - { name: title_en, label: 標題（英文，可留空）, required: false }
+      - { name: heading_zh, label: 內頁標題（可留空，留空則用列表標題）, required: false }
+      - { name: location, label: 地點標籤, required: false, hint: "例如：研討會-新加坡" }
       - { name: date, label: 日期, widget: datetime, time_format: false, date_format: "YYYY-MM-DD", format: "YYYY-MM-DD" }
       - { name: category, label: 分類, widget: select, options: [研討會, 賀！, 公告, 活動, 演講, 招生, 其他], default: 研討會, hint: "研討會＝橘色、賀！＝紅色" }
+      - { name: archived, label: 移到「過往成果」, widget: boolean, default: false, hint: "打勾後不會出現在最新消息，改列在過往成果頁" }
       - { name: pinned, label: 置頂, widget: boolean, default: false }
-      - { name: image, label: 圖片, widget: image, required: false }
+      - { name: images, label: 照片（可多張）, widget: image, multiple: true, required: false }
       - { name: link, label: 外部連結, required: false }
       - { name: body, label: 內容（中文）, widget: markdown, required: false }
       - { name: body_en, label: 內容（英文，可留空）, widget: markdown, required: false }
@@ -52,6 +55,8 @@ collections:
           - { name: phone, label: 聯絡電話, required: false }
           - { name: office_zh, label: 個人辦公室（中文）, required: false }
           - { name: office_en, label: 個人辦公室（英文）, required: false }
+          - { name: nstc_writings_url, label: 著作目錄（國科會網址）, required: false }
+          - { name: nstc_projects_url, label: 國科會計畫（國科會網址）, required: false }
           - { name: bio_zh, label: 簡介（中文）, widget: markdown, required: false }
           - { name: bio_en, label: 簡介（英文）, widget: markdown, required: false }
           - name: sections
@@ -89,9 +94,9 @@ collections:
                   - { label: 博士後研究員, value: postdoc }
                   - { label: 博士生, value: phd }
                   - { label: 碩士生, value: master }
-                  - { label: 大學部專題生, value: undergrad }
+                  - { label: 專題生, value: undergrad }
                   - { label: 研究助理, value: assistant }
-                  - { label: 畢業校友, value: alumni }
+                  - { label: 畢業生, value: alumni }
               - { name: title_zh, label: 職稱／班別（中文）, required: false, hint: "例如：博士班、碩士班" }
               - { name: title_en, label: 職稱／班別（英文）, required: false }
               - { name: year, label: 入學學年度, required: false, hint: "例如：115學年度（同組會依此分段）" }
@@ -122,37 +127,8 @@ collections:
               - { name: description_en, label: 說明（英文）, widget: markdown, required: false }
               - { name: images, label: 照片（可多張）, widget: image, multiple: true, required: false }
 
-      - name: achievements
-        label: 過往成果
-        file: src/data/publications.json
-        fields:
-          - name: items
-            label: 成果列表
-            label_singular: 成果
-            widget: list
-            add_to_top: true
-            summary: "{{fields.year}}｜{{fields.title}}"
-            fields:
-              - { name: year, label: 年份, widget: number, value_type: int }
-              - name: type
-                label: 類型
-                widget: select
-                default: conference
-                options:
-                  - { label: 獲獎, value: award }
-                  - { label: 期刊論文, value: journal }
-                  - { label: 研討會論文, value: conference }
-                  - { label: 研究計畫, value: project }
-                  - { label: 專利, value: patent }
-                  - { label: 專書／章節, value: book }
-                  - { label: 其他, value: other }
-              - { name: title, label: 題目／名稱 }
-              - { name: authors, label: 作者／成員, required: false }
-              - { name: venue, label: 期刊／會議／單位, required: false }
-              - { name: link, label: 連結（DOI 等）, required: false }
-
       - name: projects
-        label: 計畫一覽（顯示在過往成果頁）
+        label: 產學計畫（計畫一覽）
         file: src/data/projects.json
         fields:
           - name: items

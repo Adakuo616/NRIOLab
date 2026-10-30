@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { navItem, type Lang } from '../lib/i18n';
+import prof from '../data/professor.json';
+
+// 著作目錄 / 國科會計畫: embed the professor's page on the NSTC researcher database, like the original site.
+const { lang, id } = Astro.props as { lang: Lang; id: 'academic-writings' | 'nstc-projects' };
+const nav = navItem(id);
+const url = id === 'academic-writings' ? prof.nstc_writings_url : prof.nstc_projects_url;
+const note = lang === 'zh'
+  ? '資料來源：國科會學術研發服務網。若下方內容未顯示，請點此開啟'
+  : 'Source: NSTC Academic Research Service. If the content below does not load, open it here';
+---
+<Base lang={lang} path={`professor/${id}/`} navId={id} title={nav[lang]}>
+  <PageBanner lang={lang} zh={nav.zh} en={nav.en} />
+  <div class="container">
+    {url && (
+      <>
+        <p class="embed-note"><a href={url} target="_blank" rel="noopener">{note} ↗</a></p>
+        <iframe class="nstc-frame" src={url} title={nav[lang]} loading="lazy" referrerpolicy="no-referrer"></iframe>
+      </>
+    )}
+  </div>
+</Base>

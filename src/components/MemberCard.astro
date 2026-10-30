@@ -1,0 +1,14 @@
+---
+import { t, asset, type Lang } from '../lib/i18n';
+const { m, lang, link } = Astro.props as { m: any; lang: Lang; link?: string };
+const Tag = link ? 'a' : 'div';
+const entrance = (y: string) => lang === 'zh' ? y : y.replace('學年度', ' (ROC academic year)');
+---
+<Tag class="card member-card" href={link}>
+  {m.photo ? <img src={asset(m.photo)} alt={t(m, 'name', lang)} loading="lazy" width="112" height="112"> : <div class="avatar-ph" />}
+  <h3>{t(m, 'name', lang)}</h3>
+  {lang === 'zh' && m.name_en && <div class="member-en">{m.name_en}</div>}
+  {t(m, 'title', lang) && <div class="muted">{t(m, 'title', lang)}</div>}
+  {m.year && <div class="muted">{lang === 'zh' ? '入學：' : 'Entrance: '}{entrance(m.year)}</div>}
+  {!link && m.email && <a class="member-mail" href={`mailto:${m.email}`}>{m.email}</a>}
+</Tag>
