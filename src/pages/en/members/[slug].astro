@@ -1,0 +1,9 @@
+---
+import View from '../../../views/MemberDetail.astro';
+import data from '../../../data/members.json';
+
+export function getStaticPaths() {
+  return data.items.filter((m: any) => m.role !== 'pi' && m.slug).map((member: any) => ({ params: { slug: member.slug }, props: { member } }));
+}
+---
+<View lang="en" member={Astro.props.member} />

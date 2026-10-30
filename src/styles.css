@@ -212,3 +212,18 @@ h1, h2, h3 { line-height: 1.35; }
 .project-meta { font-size: .92rem; color: #4a5568; }
 .project-meta span { display: inline-block; margin-right: 16px; }
 .pub-group h3 { font-size: 1.1rem; margin: 24px 0 8px; }
+
+/* ===== 成員個人頁 ===== */
+a.member-card { color: var(--text); text-decoration: none; transition: transform .15s, box-shadow .15s; }
+a.member-card:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0, 0, 0, .07); }
+.member-en { font-size: .85rem; color: var(--muted); }
+.member-year { font-size: 1rem; color: var(--muted); font-weight: 500; margin: 20px 0 10px; }
+.research-tags { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.research-tags li { background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: 4px 14px; font-size: .92rem; }
+.pub-details { margin-top: 28px; border-top: 1px solid var(--line); padding-top: 12px; }
+.pub-details summary { cursor: pointer; font-weight: 700; font-size: 1.2rem; color: var(--navy); padding: 4px 0; }
+.pub-details .prose { margin-top: 8px; font-size: 1rem; }
+.pub-details ol, .pub-details ul { padding-left: 22px; }
+.pub-details li { margin-bottom: 12px; }
+.back-link { margin-top: 40px; }
+@media (max-width: 640px) { .prof-card img, .prof-ph { width: 140px; height: 175px; } }

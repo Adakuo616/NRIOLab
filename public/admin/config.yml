@@ -75,10 +75,11 @@ collections:
             label: 成員列表
             label_singular: 成員
             widget: list
-            summary: "{{fields.name_zh}}｜{{fields.title_zh}}"
+            summary: "{{fields.name_zh}}｜{{fields.title_zh}}｜{{fields.year}}"
             fields:
               - { name: name_zh, label: 姓名（中文） }
               - { name: name_en, label: 姓名（英文）, required: false }
+              - { name: slug, label: 個人頁網址代稱, hint: "英文小寫與連字號，例如 wen-hui-kuo（網址會是 /members/wen-hui-kuo/）。設定後請勿更改" }
               - name: role
                 label: 身分（決定分組）
                 widget: select
@@ -91,13 +92,17 @@ collections:
                   - { label: 大學部專題生, value: undergrad }
                   - { label: 研究助理, value: assistant }
                   - { label: 畢業校友, value: alumni }
-              - { name: title_zh, label: 職稱／年級（中文）, required: false, hint: "例如：碩二、博士班" }
-              - { name: title_en, label: 職稱／年級（英文）, required: false }
-              - { name: year, label: 入學學年度, required: false, hint: "例如：115學年度" }
-              - { name: research_zh, label: 研究方向（中文）, widget: text, required: false, hint: "一行一項" }
-              - { name: research_en, label: 研究方向（英文）, widget: text, required: false, hint: "一行一項" }
+              - { name: title_zh, label: 職稱／班別（中文）, required: false, hint: "例如：博士班、碩士班" }
+              - { name: title_en, label: 職稱／班別（英文）, required: false }
+              - { name: year, label: 入學學年度, required: false, hint: "例如：115學年度（同組會依此分段）" }
               - { name: email, label: Email, required: false }
               - { name: photo, label: 照片, widget: image, required: false }
+              - { name: research_zh, label: 研究方向, widget: text, required: false, hint: "一行一項" }
+              - { name: research_en, label: 研究方向（英文版，可留空）, widget: text, required: false }
+              - { name: journal, label: 期刊論文 Journal, widget: markdown, required: false, hint: "每篇一行，以 1. 2. 編號" }
+              - { name: conference, label: 研討會論文 Publish, widget: markdown, required: false, hint: "每篇一行，以 1. 2. 編號" }
+              - { name: thesis, label: 碩士論文 Thesis, widget: markdown, required: false }
+              - { name: awards, label: 獲獎 Award, widget: markdown, required: false, hint: "每項一行，以 - 開頭" }
 
       - name: life
         label: 生活點滴
