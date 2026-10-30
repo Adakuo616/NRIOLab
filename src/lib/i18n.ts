@@ -2,7 +2,8 @@ import { marked } from 'marked';
 import site from '../data/site.json';
 
 export type Lang = 'zh' | 'en';
-export const LANGS: Lang[] = ['zh', 'en'];
+// English pages are switched off for now; add 'en' back (and src/pages/en) to restore them.
+export const LANGS: Lang[] = ['zh'];
 export const HTML_LANG: Record<Lang, string> = { zh: 'zh-Hant', en: 'en' };
 export const OG_LOCALE: Record<Lang, string> = { zh: 'zh_TW', en: 'en_US' };
 

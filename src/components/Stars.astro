@@ -1,0 +1,29 @@
+---
+// A light "starry sky" layer: small dots plus a few four-point sparkles in the logo colours.
+// Positions come from a fixed seed so every build renders the same sky.
+const { count = 50, seed = 7 } = Astro.props as { count?: number; seed?: number };
+let x = seed;
+const rand = () => ((x = (x * 9301 + 49297) % 233280) / 233280);
+const colors = ['var(--navy)', 'var(--navy)', 'var(--logo-blue)', 'var(--logo-blue)', 'var(--logo-green)'];
+const stars = Array.from({ length: count }, (_, i) => {
+  const sparkle = i % 6 === 0;
+  return {
+    sparkle,
+    left: (rand() * 100).toFixed(2),
+    top: (rand() * 100).toFixed(2),
+    size: sparkle ? 11 + rand() * 12 : 2 + rand() * 3,
+    color: colors[Math.floor(rand() * colors.length)],
+    opacity: (sparkle ? 0.55 : 0.3) + rand() * 0.4,
+    delay: (rand() * 5).toFixed(2),
+    dur: (2.8 + rand() * 3.2).toFixed(2)
+  };
+});
+---
+<div class="stars" aria-hidden="true">
+  {stars.map((s) => (
+    <span
+      class={s.sparkle ? 'star sparkle' : 'star'}
+      style={`left:${s.left}%;top:${s.top}%;width:${s.size.toFixed(1)}px;height:${s.size.toFixed(1)}px;color:${s.color};--o:${s.opacity.toFixed(2)};animation-delay:${s.delay}s;animation-duration:${s.dur}s`}
+    >{s.sparkle && <svg viewBox="0 0 20 20"><path d="M10 0 C11 7 13 9 20 10 C13 11 11 13 10 20 C9 13 7 11 0 10 C7 9 9 7 10 0Z" fill="currentColor" /></svg>}</span>
+  ))}
+</div>

@@ -25,15 +25,15 @@ const ogImage = image || site.logo;
 const other: Lang = lang === 'zh' ? 'en' : 'zh';
 ---
 <!doctype html>
-<html lang={HTML_LANG[lang]}>
+<html lang={HTML_LANG[lang]} class="no-js">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{fullTitle}</title>
   <meta name="description" content={desc}>
   {noindex ? <meta name="robots" content="noindex"> : <link rel="canonical" href={canonical}>}
-  {!noindex && LANGS.map((l) => <link rel="alternate" hreflang={HTML_LANG[l]} href={abs(href(path, l))}>)}
-  {!noindex && <link rel="alternate" hreflang="x-default" href={abs(href(path, 'zh'))}>}
+  {!noindex && LANGS.length > 1 && LANGS.map((l) => <link rel="alternate" hreflang={HTML_LANG[l]} href={abs(href(path, l))}>)}
+  {!noindex && LANGS.length > 1 && <link rel="alternate" hreflang="x-default" href={abs(href(path, 'zh'))}>}
   {site.google_site_verification && <meta name="google-site-verification" content={site.google_site_verification}>}
   <meta property="og:type" content={ogType}>
   <meta property="og:site_name" content={name}>
@@ -49,6 +49,7 @@ const other: Lang = lang === 'zh' ? 'en' : 'zh';
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@600;700&display=swap" rel="stylesheet">
   {jsonLd.map((d) => <script type="application/ld+json" set:html={JSON.stringify(d)} />)}
+  <script is:inline>document.documentElement.classList.remove('no-js')</script>
 </head>
 <body>
   <a class="skip" href="#main">{lang === 'zh' ? '跳到主要內容' : 'Skip to content'}</a>
@@ -78,7 +79,7 @@ const other: Lang = lang === 'zh' ? 'en' : 'zh';
             {n[lang]}{lang === 'zh' && <span class="nav-en"> {n.en}</span>}
           </a>
         ))}
-        <a class="lang-btn" href={href(path, other)} hreflang={HTML_LANG[other]} lang={HTML_LANG[other]}>{ui.switchLang}</a>
+        {LANGS.length > 1 && <a class="lang-btn" href={href(path, other)} hreflang={HTML_LANG[other]} lang={HTML_LANG[other]}>{ui.switchLang}</a>}
       </nav>
     </div>
   </header>
@@ -107,6 +108,14 @@ const other: Lang = lang === 'zh' ? 'en' : 'zh';
     </div>
   </footer>
   <script>
+    // Fade sections in as they scroll into view; without JS (or IntersectionObserver) everything stays visible.
+    const items = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }), { rootMargin: '0px 0px -8% 0px' });
+      items.forEach((el) => io.observe(el));
+    } else items.forEach((el) => el.classList.add('in'));
     const toggle = document.querySelector('.nav-toggle');
     const nav = document.getElementById('nav');
     toggle?.addEventListener('click', () => {

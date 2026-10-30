@@ -1,0 +1,18 @@
+---
+import { t, asset, href, fmtDate, isoDate, CATEGORY_CLASS, type Lang } from '../lib/i18n';
+import type { News } from '../lib/news';
+const { entry, lang } = Astro.props as { entry: News; lang: Lang };
+const d = entry.data;
+const cover = d.image || d.images?.[0];
+---
+<a class="news-card reveal" href={href(`news/${entry.id}/`, lang)}>
+  <div class="nc-img">
+    {cover && <img src={asset(cover)} alt="" loading="lazy" width="480" height="320">}
+    <time class="nc-date" datetime={isoDate(d.date)}><b>{fmtDate(d.date).slice(5)}</b>{d.date.getUTCFullYear()}</time>
+  </div>
+  <div class="nc-body">
+    {d.category && <span class={`cat ${CATEGORY_CLASS[d.category] || ''}`}>【{d.category}】</span>}
+    {d.location && <span class="nc-loc">{d.location}</span>}
+    <h3>{t(d, 'title', lang)}</h3>
+  </div>
+</a>

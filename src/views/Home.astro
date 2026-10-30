@@ -1,28 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
-import NewsRows from '../components/NewsRows.astro';
+import NewsCard from '../components/NewsCard.astro';
+import Icon from '../components/Icon.astro';
 import NetworkArt from '../components/NetworkArt.astro';
+import Stars from '../components/Stars.astro';
 import { UI, t, asset, href, site, type Lang } from '../lib/i18n';
-import { getNews, getCurrentNews } from '../lib/news';
-import members from '../data/members.json';
-import projects from '../data/projects.json';
+import { getCurrentNews } from '../lib/news';
 import prof from '../data/professor.json';
 import life from '../data/life.json';
 
 const { lang } = Astro.props as { lang: Lang };
 const ui = UI[lang];
 const zh = lang === 'zh';
-const latest = (await getCurrentNews()).slice(0, 5);
-const all = await getNews();
 
-// Numbers come straight from the site data, so they stay current as content is added.
-const stats = [
-  { n: members.items.filter((m: any) => m.role !== 'alumni' && m.role !== 'pi').length, zh: '在學成員', en: 'Members' },
-  { n: all.filter((n) => n.data.category === '研討會').length, zh: '研討會發表', en: 'Conferences' },
-  { n: all.filter((n) => n.data.category === '賀！').length, zh: '獲獎與榮譽', en: 'Awards & Honors' },
-  { n: projects.items.length, zh: '產學計畫', en: 'Industry Projects' }
-];
-const photos = life.items.flatMap((it: any) => (it.images || []).slice(0, 1).map((src: string) => ({ src, title: t(it, 'title', lang) }))).slice(0, 5);
+const withPhoto = (await getCurrentNews()).filter((n) => n.data.images?.length);
+const featured = withPhoto.slice(0, 3);
+// One photo per 生活點滴 event for the mosaic.
+const lifePhotos = life.items.flatMap((it: any) => (it.images || []).slice(0, 1).map((src: string) => ({ src, title: t(it, 'title', lang), alt: t(it, 'title', lang) })));
+const photos = lifePhotos.slice(0, 5);
 
 // Break the Chinese title before 「實驗室」 so it never splits mid-word.
 const fullName = site.name_zh_full || site.name_zh;
@@ -42,6 +37,7 @@ const jsonLd = [
 ---
 <Base lang={lang} path="" navId="" jsonLd={jsonLd}>
   <section class="hero">
+    <Stars count={110} />
     <NetworkArt class="art-left" />
     <div class="container hero-grid">
       <div class="hero-text">
@@ -61,34 +57,27 @@ const jsonLd = [
     </div>
   </section>
 
-  <section class="stats" aria-label={zh ? '實驗室概況' : 'Lab at a glance'}>
-    <div class="container narrow">
-      <div class="stats-grid">
-        {stats.map((s) => <div class="stat"><strong>{s.n}</strong><span>{s[lang]}</span></div>)}
-      </div>
-    </div>
-  </section>
-
   <section class="section">
-    <div class="container narrow">
-      <header class="sec-head">
+    <div class="container">
+      <header class="sec-head reveal">
         <div><p class="eyebrow">News</p><h2>{ui.latest}</h2></div>
         <a class="more-link" href={href('news/', lang)}>{ui.more}</a>
       </header>
-      <NewsRows list={latest} lang={lang} />
+      <div class="news-cards">{featured.map((n) => <NewsCard entry={n} lang={lang} />)}</div>
     </div>
   </section>
 
   {site.highlights?.length > 0 && (
-    <section class="section">
+    <section class="section band">
       <div class="container">
-        <header class="sec-head">
+        <header class="sec-head reveal">
           <div><p class="eyebrow">Research</p><h2>{zh ? '研究方向' : 'Research Focus'}</h2></div>
           <a class="more-link" href={href('introduction/', lang)}>{zh ? '實驗室介紹' : 'Introduction'}</a>
         </header>
         <div class="research-cards">
           {site.highlights.map((h: any, i: number) => (
-            <article class="r-card">
+            <article class="r-card reveal" style={`--d:${i * 90}ms`}>
+              <span class="r-icon"><Icon name={['network', 'simulation', 'ai'][i % 3]} /></span>
               <span class="r-num">{String(i + 1).padStart(2, '0')}</span>
               <h3>{t(h, 'title', lang)}</h3>
               <p>{t(h, 'text', lang)}</p>
@@ -101,7 +90,7 @@ const jsonLd = [
 
   <section class="section">
     <div class="container">
-      <div class="home-split">
+      <div class="home-split reveal">
         <div>
           <header class="sec-head"><div><p class="eyebrow">Professor</p><h2>{zh ? '指導教授' : 'Professor'}</h2></div></header>
           <div class="pi-feature">
